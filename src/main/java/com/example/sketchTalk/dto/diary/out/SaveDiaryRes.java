@@ -1,7 +1,6 @@
 package com.example.sketchTalk.dto.diary.out;
 
 public record SaveDiaryRes(
-        Long diaryId,
-        String message
+        Long diaryId
 ) {
 }
