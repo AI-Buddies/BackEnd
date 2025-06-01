@@ -1,7 +1,7 @@
 package com.example.sketchTalk.model.entity;
 
+import com.example.sketchTalk.dto.diary.in.SaveDiaryReq;
 import com.example.sketchTalk.model.Emotion;
-import com.example.sketchTalk.dto.in.DiaryInDTO;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -40,12 +40,12 @@ public class Diary {
     private LocalDateTime updatedAt;
 
 
-    public Diary(DiaryInDTO diaryInDTO) {
-        this.user = diaryInDTO.getUser();
-        this.title = diaryInDTO.getTitle();
-        this.content = diaryInDTO.getContent();
-        this.date = diaryInDTO.getDate();
-        this.emotion = diaryInDTO.getEmotion();
+    public Diary(SaveDiaryReq saveDiaryReq) {
+        this.user = saveDiaryReq.user();
+        this.title = saveDiaryReq.title();
+        this.content = saveDiaryReq.content();
+        this.date = saveDiaryReq.date();
+        this.emotion = saveDiaryReq.emotion();
     }
 
 

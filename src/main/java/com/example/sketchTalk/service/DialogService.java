@@ -1,6 +1,5 @@
 package com.example.sketchTalk.service;
 
-import com.example.sketchTalk.dto.in.DiaryInDTO;
 import com.example.sketchTalk.dto.out.DiaryOutDTO;
 import com.example.sketchTalk.repository.DiaryRepository;
 import com.example.sketchTalk.model.entity.Diary;

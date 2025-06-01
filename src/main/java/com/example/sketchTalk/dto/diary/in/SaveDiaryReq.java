@@ -8,7 +8,7 @@ import java.util.Date;
 public record SaveDiaryReq(
         User user,
         String title,
-        String comment,
+        String content,
         Date date,
         Emotion emotion
 ) {

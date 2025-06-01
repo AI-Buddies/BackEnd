@@ -1,6 +1,5 @@
 package com.example.sketchTalk.controller;
 
-import com.example.sketchTalk.dto.in.DiaryInDTO;
 import com.example.sketchTalk.dto.out.DiaryOutDTO;
 import com.example.sketchTalk.service.DialogService;
 import lombok.RequiredArgsConstructor;
