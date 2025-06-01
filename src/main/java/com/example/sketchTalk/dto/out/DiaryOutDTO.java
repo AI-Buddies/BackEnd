@@ -1,4 +1,4 @@
-package com.example.sketchTalk.dialog.dto.out;
+package com.example.sketchTalk.dto.out;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

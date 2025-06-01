@@ -1,7 +1,7 @@
-package com.example.sketchTalk.dialog.dto.in;
+package com.example.sketchTalk.dto.in;
 
-import com.example.sketchTalk.Emotion;
-import com.example.sketchTalk.model.User;
+import com.example.sketchTalk.model.Emotion;
+import com.example.sketchTalk.model.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

@@ -1,9 +1,9 @@
-package com.example.sketchTalk.dialog.service;
+package com.example.sketchTalk.service;
 
-import com.example.sketchTalk.dialog.dto.in.DiaryInDTO;
-import com.example.sketchTalk.dialog.dto.out.DiaryOutDTO;
-import com.example.sketchTalk.dialog.repository.DiaryRepository;
-import com.example.sketchTalk.model.Diary;
+import com.example.sketchTalk.dto.in.DiaryInDTO;
+import com.example.sketchTalk.dto.out.DiaryOutDTO;
+import com.example.sketchTalk.repository.DiaryRepository;
+import com.example.sketchTalk.model.entity.Diary;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,7 @@
-package com.example.sketchTalk.model;
+package com.example.sketchTalk.model.entity;
 
-import com.example.sketchTalk.Emotion;
-import com.example.sketchTalk.dialog.dto.in.DiaryInDTO;
+import com.example.sketchTalk.model.Emotion;
+import com.example.sketchTalk.dto.in.DiaryInDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 

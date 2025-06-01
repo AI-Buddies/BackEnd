@@ -1,4 +1,4 @@
-package com.example.sketchTalk.model;
+package com.example.sketchTalk.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

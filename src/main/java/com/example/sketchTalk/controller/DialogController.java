@@ -1,8 +1,8 @@
-package com.example.sketchTalk.dialog.controller;
+package com.example.sketchTalk.controller;
 
-import com.example.sketchTalk.dialog.dto.in.DiaryInDTO;
-import com.example.sketchTalk.dialog.dto.out.DiaryOutDTO;
-import com.example.sketchTalk.dialog.service.DialogService;
+import com.example.sketchTalk.dto.in.DiaryInDTO;
+import com.example.sketchTalk.dto.out.DiaryOutDTO;
+import com.example.sketchTalk.service.DialogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
