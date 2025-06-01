@@ -20,9 +20,9 @@ public class Diary {
     @Column(name="diary_id")
     private Long diaryId;
 
-    @ManyToOne
+    //@ManyToOne <- 추후에 User로 변경
     @JoinColumn(name="user_id")
-    private User user;
+    private Long userId;
 
     @Column(nullable=false)
     private String title;
@@ -41,7 +41,7 @@ public class Diary {
 
 
     public Diary(SaveDiaryReq saveDiaryReq) {
-        this.user = saveDiaryReq.user();
+        this.userId = saveDiaryReq.userId();//추후에 User로 변경
         this.title = saveDiaryReq.title();
         this.content = saveDiaryReq.content();
         this.date = saveDiaryReq.date();
