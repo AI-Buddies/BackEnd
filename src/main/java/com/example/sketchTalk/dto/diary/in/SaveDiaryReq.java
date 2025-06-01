@@ -5,7 +5,7 @@ import com.example.sketchTalk.model.entity.User;
 
 import java.util.Date;
 
-public record saveDiaryReq(
+public record SaveDiaryReq(
         User user,
         String title,
         String comment,
