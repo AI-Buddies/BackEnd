@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class DiaryController {
     private final DiaryService diaryService;
 
-    @PostMapping("/")
+    @PostMapping("/save")
     public ResponseEntity<SaveDiaryRes> saveDiary(@RequestBody SaveDiaryReq req) {
         SaveDiaryRes saveDiaryRes = diaryService.putDiary(req);
         return ResponseEntity.ok(saveDiaryRes);
