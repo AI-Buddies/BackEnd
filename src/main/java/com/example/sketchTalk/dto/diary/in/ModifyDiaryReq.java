@@ -2,8 +2,6 @@ package com.example.sketchTalk.dto.diary.in;
 
 import com.example.sketchTalk.model.Emotion;
 
-import java.util.Date;
-
 public record ModifyDiaryReq(
         Long diaryId,
         String title,
