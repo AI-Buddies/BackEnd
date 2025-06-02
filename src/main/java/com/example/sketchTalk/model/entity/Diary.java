@@ -48,5 +48,11 @@ public class Diary {
         this.emotion = saveDiaryReq.emotion();
     }
 
+    public void rewriteDiary(String title, String content, Emotion emotion) {
+        this.title = title;
+        this.content = content;
+        this.emotion = emotion;
+    }
+
 
 }
