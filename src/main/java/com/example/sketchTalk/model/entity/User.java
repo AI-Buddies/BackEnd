@@ -1,16 +1,12 @@
 package com.example.sketchTalk.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "user")
 public class User {
@@ -30,4 +26,12 @@ public class User {
 
     @Column(nullable = false)
     private LocalDate birthdate;
+
+    @Builder
+    public User(String loginId, String password, String nickname, LocalDate birthdate) {
+        this.loginId = loginId;
+        this.password = password;
+        this.nickname = nickname;
+        this.birthdate = birthdate;
+    }
 }

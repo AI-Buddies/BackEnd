@@ -1,13 +1,14 @@
 package com.example.sketchTalk.controller;
 
 import com.example.sketchTalk.dto.ResponseDTO;
-import com.example.sketchTalk.dto.in.ChangePasswordDTO;
-import com.example.sketchTalk.dto.in.LoginDTO;
+import com.example.sketchTalk.dto.user.in.ChangeNicknameReq;
+import com.example.sketchTalk.dto.user.in.ChangePasswordReq;
+import com.example.sketchTalk.dto.user.in.LoginReq;
+import com.example.sketchTalk.dto.user.in.RegisterReq;
+import com.example.sketchTalk.dto.user.out.UserRes;
 import com.example.sketchTalk.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import com.example.sketchTalk.model.entity.User;
 
 @RestController
 @RequestMapping("/user")
@@ -19,51 +20,34 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO) {
-        ResponseDTO result = service.login(loginDTO);
-
-        if (!result.isSuccess) {
-            return ResponseEntity.status(401).body(result.getMessage());
-        }
-
-        return ResponseEntity.ok("LOGIN_SUCCESS");
+    public ResponseEntity<UserRes> login(@RequestBody LoginReq loginReq) {
+        UserRes result = service.login(loginReq);
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody User user) {
-        ResponseDTO result = service.register(user);
-
-        if (!result.isSuccess) {
-            if (result.getMessage().equals("BIRTH_DATE_INVALID"))
-                return ResponseEntity.status(400).body(result.getMessage());
-
-            return ResponseEntity.status(409).body(result.getMessage());
-        }
-
-        return ResponseEntity.ok("REGISTER_SUCCESS");
+    public ResponseEntity<UserRes> register(@RequestBody RegisterReq registerReq) {
+        UserRes result = service.register(registerReq);
+        return ResponseEntity.ok(result);
     }
 
     // TODO: 로그아웃 추가
 
     @PatchMapping("/password")
-    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
-        ResponseDTO result = service.changePassword(changePasswordDTO);
+    public ResponseEntity<UserRes> changePassword(@RequestBody ChangePasswordReq changePasswordReq) {
+        UserRes result = service.changePassword(changePasswordReq);
+        return ResponseEntity.ok(result);
+    }
 
-        if (!result.isSuccess) {
-            return ResponseEntity.status(401).body(result.getMessage());
-        }
-
-        return ResponseEntity.ok(result.getMessage());
+    @PatchMapping("/nickname")
+    public ResponseEntity<UserRes> changeNickname(@RequestBody ChangeNicknameReq changeNicknameReq) {
+        UserRes result = service.changeNickname(changeNicknameReq);
+        return ResponseEntity.ok(result);
     }
 
     @DeleteMapping
-    public ResponseEntity<String> delete(@RequestBody LoginDTO loginDTO) {
-        ResponseDTO result = service.delete(loginDTO);
-
-        if (!result.isSuccess) {
-            return ResponseEntity.status(401).body(result.getMessage());
-        }
-
-        return ResponseEntity.ok(result.getMessage());
+    public ResponseEntity<UserRes> delete(@RequestBody LoginReq loginReq) {
+        UserRes result = service.delete(loginReq);
+        return ResponseEntity.ok(result);
     }
 }

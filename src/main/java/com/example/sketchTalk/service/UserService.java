@@ -1,9 +1,12 @@
 package com.example.sketchTalk.service;
 
-import com.example.sketchTalk.dto.ResponseDTO;
-import com.example.sketchTalk.dto.in.ChangeNicknameDTO;
-import com.example.sketchTalk.dto.in.ChangePasswordDTO;
-import com.example.sketchTalk.dto.in.LoginDTO;
+import com.example.sketchTalk.dto.user.in.ChangeNicknameReq;
+import com.example.sketchTalk.dto.user.in.ChangePasswordReq;
+import com.example.sketchTalk.dto.user.in.LoginReq;
+import com.example.sketchTalk.dto.user.in.RegisterReq;
+import com.example.sketchTalk.dto.user.out.UserRes;
+import com.example.sketchTalk.exception.user.UserException;
+import com.example.sketchTalk.exception.user.UserExceptions;
 import com.example.sketchTalk.model.entity.User;
 import com.example.sketchTalk.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,95 +31,105 @@ public class UserService {
         return userOpt.isPresent();
     }
 
-    public User authenticateAndGetUser(LoginDTO loginDTO) {
-        User user = repository.findByLoginId(loginDTO.getLoginId())
-                .orElseThrow( () -> new RuntimeException("ID_NOT_FOUND"));
+    public User authenticateAndGetUser(LoginReq loginReq) {
+        User user = repository.findByLoginId(loginReq.getLoginId())
+                .orElseThrow( () -> new UserException(UserExceptions.ID_NOT_FOUND));
 
-        if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
-            throw new RuntimeException("PASSWORD_MISMATCH");
+        if (!passwordEncoder.matches(loginReq.getPassword(), user.getPassword())) {
+            throw new UserException(UserExceptions.PASSWORD_MISMATCH);
         }
 
         return user;
     }
 
-    public ResponseDTO login(LoginDTO loginDTO) {
-        try {
-            User user = authenticateAndGetUser(loginDTO);
+    public UserRes login(LoginReq loginReq) {
 
-            return new ResponseDTO(true, "LOGIN_SUCCESS");
-        } catch (RuntimeException e) {
-            return new ResponseDTO (false, e.getMessage());
-        }
+        // 반환받지 않고 authenticate
+        authenticateAndGetUser(loginReq);
+
+        return new UserRes("LOGIN_SUCCESS");
     }
 
-    public ResponseDTO register(User user) {
-        Optional<User> userOpt = repository.findByLoginId(user.getLoginId());
+    public UserRes register(RegisterReq registerReq) {
 
-        if (userOpt.isPresent()) {
-            return new ResponseDTO(false,"ID_ALREADY_EXISTS");
-        }
+        // 1. 중복 ID 확인
+        repository.findByLoginId(registerReq.getLoginId())
+                .ifPresent(user -> {
+                    throw new UserException(UserExceptions.ID_ALREADY_EXISTS);
+                });
 
         // TODO: 비밀번호 제약조건이 필요하다면 이곳에 넣기!!
 
-        if (existNickname(user.getNickname())) {
-            return new ResponseDTO(false, "NICKNAME_ALREADY_EXISTS");
+
+        // 2. 중복 닉네임 확인
+        if (existNickname(registerReq.getNickname())) {
+            throw new UserException(UserExceptions.NICKNAME_ALREADY_EXISTS);
         }
 
-        if (user.getBirthdate().isAfter(LocalDate.now())) {
-            return new ResponseDTO(false, "BIRTH_DATE_INVALID");
+        // 3. 생년월일 타당성 확인
+        if (registerReq.getBirthdate().isAfter(LocalDate.now())) {
+            throw new UserException(UserExceptions.BIRTHDATE_INVALID);
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        repository.save(user);
+        User newUser = User.builder()
+                .loginId(registerReq.getLoginId())
+                .password(passwordEncoder.encode(registerReq.getPassword()))
+                .nickname(registerReq.getNickname())
+                .birthdate(registerReq.getBirthdate())
+                .build();
 
-        return new ResponseDTO(true, "REGISTER_SUCCESS");
+        repository.save(newUser);
+
+        return new UserRes("REGISTER_SUCCESS");
     }
 
     // TODO: 로그아웃 추가
 
-    public ResponseDTO changePassword(ChangePasswordDTO changePasswordDTO) {
-        LoginDTO loginDTO = new LoginDTO(changePasswordDTO.getLoginId(), changePasswordDTO.getOldPassword());
+    public UserRes changePassword(ChangePasswordReq changePasswordReq) {
+        LoginReq loginReq = new LoginReq(changePasswordReq.getLoginId(), changePasswordReq.getOldPassword());
 
-        try {
-            User user = authenticateAndGetUser(loginDTO);
+        User currentUser = authenticateAndGetUser(loginReq);
 
-            // TODO: 비밀번호 제약조건이 필요하다면 이곳에 넣기!!
+        // TODO: 비밀번호 제약조건이 필요하다면 이곳에 넣기!!
 
-            user.setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
-            repository.save(user);
+        User newUser = User.builder()
+                .loginId(currentUser.getLoginId())
+                .password(passwordEncoder.encode(changePasswordReq.getNewPassword()))
+                .nickname(currentUser.getNickname())
+                .birthdate(currentUser.getBirthdate())
+                .build();
 
-            return new ResponseDTO(true, "PASSWORD_CHANGED");
-        } catch (RuntimeException e) {
-            return new ResponseDTO(false, e.getMessage());
-        }
+        repository.save(newUser);
+
+        return new UserRes("PASSWORD_CHANGED");
     }
 
-    public ResponseDTO changeNickname(ChangeNicknameDTO changeNicknameDTO) {
-        LoginDTO loginDTO = new LoginDTO(changeNicknameDTO.getLoginId(), changeNicknameDTO.getPassword());
+    public UserRes changeNickname(ChangeNicknameReq changeNicknameReq) {
+        LoginReq loginReq = new LoginReq(changeNicknameReq.getLoginId(), changeNicknameReq.getPassword());
 
-        try {
-            User user = authenticateAndGetUser(loginDTO);
+        User currentUser = authenticateAndGetUser(loginReq);
 
-            if (existNickname(changeNicknameDTO.getNewNickname())) {
-                return new ResponseDTO(false, "NICKNAME_ALREADY_EXISTS");
-            }
-
-            user.setNickname(changeNicknameDTO.getNewNickname());
-            repository.save(user);
-            return new ResponseDTO(true, "NICKNAME_CHANGED");
-        } catch (RuntimeException e) {
-            return new ResponseDTO(false, e.getMessage());
+        if (existNickname(changeNicknameReq.getNewNickname())) {
+            throw new UserException(UserExceptions.NICKNAME_ALREADY_EXISTS);
         }
+
+        User newUser = User.builder()
+                .loginId(currentUser.getLoginId())
+                .password(currentUser.getPassword())
+                .nickname(changeNicknameReq.getNewNickname())
+                .birthdate(currentUser.getBirthdate())
+                .build();
+
+        repository.save(newUser);
+
+        return new UserRes("NICKNAME_CHANGED");
     }
 
-    public ResponseDTO delete(LoginDTO loginDTO) {
-        try {
-            User user = authenticateAndGetUser(loginDTO);
+    public UserRes delete(LoginReq loginReq) {
+        User user = authenticateAndGetUser(loginReq);
 
-            repository.delete(user);
-            return new ResponseDTO(true, "DELETE_SUCCESS");
-        } catch(RuntimeException e) {
-            return new ResponseDTO(false, e.getMessage());
-        }
+        repository.delete(user);
+
+        return new UserRes("DELETE_SUCCESS");
     }
 }
