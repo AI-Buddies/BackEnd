@@ -33,8 +33,8 @@ public class Diary {
     @Column(nullable=false)
     private Date date;
 
-    @Column(nullable=false)
-    private Enum<Emotion> emotion;
+    @Enumerated(EnumType.STRING)
+    private Emotion emotion;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
