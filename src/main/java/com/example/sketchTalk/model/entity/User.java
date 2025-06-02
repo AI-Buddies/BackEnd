@@ -4,9 +4,13 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "user")
 public class User {
@@ -15,7 +19,7 @@ public class User {
     @Column(name="user_id")
     private Long userId;
 
-    @Column(nullable = false)
+    @Column(name="login_id", nullable = false)
     private String loginId;
 
     @Column(nullable = false)
@@ -25,7 +29,5 @@ public class User {
     private String nickname;
 
     @Column(nullable = false)
-    private String birthDate;
-
-
+    private LocalDate birthdate;
 }
