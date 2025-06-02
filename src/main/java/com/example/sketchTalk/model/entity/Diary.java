@@ -1,7 +1,7 @@
 package com.example.sketchTalk.model.entity;
 
+import com.example.sketchTalk.dto.diary.in.SaveDiaryReq;
 import com.example.sketchTalk.model.Emotion;
-import com.example.sketchTalk.dto.in.DiaryInDTO;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -20,9 +20,10 @@ public class Diary {
     @Column(name="diary_id")
     private Long diaryId;
 
-    @ManyToOne
-    @JoinColumn(name="user_id")
-    private User user;
+    //@ManyToOne <- 추후에 User로 변경
+    //@JoinColumn(name="user_id")
+    @Column(name="user_id")
+    private Long userId;
 
     @Column(nullable=false)
     private String title;
@@ -33,19 +34,25 @@ public class Diary {
     @Column(nullable=false)
     private Date date;
 
-    @Column(nullable=false)
-    private Enum<Emotion> emotion;
+    @Enumerated(EnumType.STRING)
+    private Emotion emotion;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
 
-    public Diary(DiaryInDTO diaryInDTO) {
-        this.user = diaryInDTO.getUser();
-        this.title = diaryInDTO.getTitle();
-        this.content = diaryInDTO.getContent();
-        this.date = diaryInDTO.getDate();
-        this.emotion = diaryInDTO.getEmotion();
+    public Diary(SaveDiaryReq saveDiaryReq) {
+        this.userId = saveDiaryReq.userId();//추후에 User로 변경
+        this.title = saveDiaryReq.title();
+        this.content = saveDiaryReq.content();
+        this.date = saveDiaryReq.date();
+        this.emotion = saveDiaryReq.emotion();
+    }
+
+    public void rewriteDiary(String title, String content, Emotion emotion) {
+        this.title = title;
+        this.content = content;
+        this.emotion = emotion;
     }
 
 
