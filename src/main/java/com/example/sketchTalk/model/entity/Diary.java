@@ -21,7 +21,8 @@ public class Diary {
     private Long diaryId;
 
     //@ManyToOne <- 추후에 User로 변경
-    @JoinColumn(name="user_id")
+    //@JoinColumn(name="user_id")
+    @Column(name="user_id")
     private Long userId;
 
     @Column(nullable=false)
