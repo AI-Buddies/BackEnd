@@ -1,12 +1,20 @@
 package com.example.sketchTalk.exception.diary;
 
+import org.springframework.http.HttpStatus;
+
 public class DiaryException extends RuntimeException {
 
-    public DiaryException(int status, String message) {
-        super(message);
+    public final DiaryExceptions diaryExceptions;
+
+    public DiaryException(DiaryExceptions diaryExceptions) {
+        this.diaryExceptions = diaryExceptions;
     }
 
-    public DiaryException(Long id) {
-        super("Diary Not Found: " + id);
+    public HttpStatus getHttpStatus() {
+        return diaryExceptions.getStatus();
+    }
+
+    public String getMessage() {
+        return diaryExceptions.getMessage();
     }
 }
