@@ -14,7 +14,7 @@ public class DiaryExceptionHandler {
         ExceptionResponse response = ExceptionResponse.builder()
                 .status(e.getHttpStatus())
                 .message(e.getMessage())
-                .data(e.getDiaryId())
+                .data("diaryID : " + e.getDiaryId())
                 .build();
         return ResponseEntity.status(e.getHttpStatus()).body(response);
     }
