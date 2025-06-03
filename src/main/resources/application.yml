@@ -19,3 +19,8 @@ spring:
         globally_quoted_identifiers: true
     open-in-view: false
 
+  servlet:
+    multipart:
+      enabled: true
+      maxFileSize: 200MB
+      maxRequestSize: 300MB
