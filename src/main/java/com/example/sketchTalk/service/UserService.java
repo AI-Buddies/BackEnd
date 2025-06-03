@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -23,12 +22,6 @@ public class UserService {
     public UserService(UserRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
-    }
-
-    public boolean existNickname(String nickname) {
-        Optional<User> userOpt = repository.findByNickname(nickname);
-
-        return userOpt.isPresent();
     }
 
     public User authenticateAndGetUser(LoginReq loginReq) {
@@ -60,13 +53,7 @@ public class UserService {
 
         // TODO: 비밀번호 제약조건이 필요하다면 이곳에 넣기!!
 
-
-        // 2. 중복 닉네임 확인
-        if (existNickname(registerReq.getNickname())) {
-            throw new UserException(UserExceptions.NICKNAME_ALREADY_EXISTS);
-        }
-
-        // 3. 생년월일 타당성 확인
+        // 2. 생년월일 타당성 확인
         if (registerReq.getBirthdate().isAfter(LocalDate.now())) {
             throw new UserException(UserExceptions.BIRTHDATE_INVALID);
         }
@@ -108,10 +95,6 @@ public class UserService {
         LoginReq loginReq = new LoginReq(changeNicknameReq.getLoginId(), changeNicknameReq.getPassword());
 
         User currentUser = authenticateAndGetUser(loginReq);
-
-        if (existNickname(changeNicknameReq.getNewNickname())) {
-            throw new UserException(UserExceptions.NICKNAME_ALREADY_EXISTS);
-        }
 
         User newUser = User.builder()
                 .loginId(currentUser.getLoginId())

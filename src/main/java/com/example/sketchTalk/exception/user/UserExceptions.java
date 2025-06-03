@@ -9,8 +9,7 @@ public enum UserExceptions {
     ID_NOT_FOUND(HttpStatus.UNAUTHORIZED, "U1", "ID_NOT_FOUND"),
     PASSWORD_MISMATCH(HttpStatus.UNAUTHORIZED, "U2", "PASSWORD_MISMATCH"),
     ID_ALREADY_EXISTS(HttpStatus.CONFLICT, "U3", "ID_ALREADY_EXISTS"),
-    NICKNAME_ALREADY_EXISTS(HttpStatus.CONFLICT, "U4", "NICKNAME_EXISTS"),
-    BIRTHDATE_INVALID(HttpStatus.BAD_REQUEST, "U5", "BIRTH_DATE_INVALID");
+    BIRTHDATE_INVALID(HttpStatus.BAD_REQUEST, "U4", "BIRTH_DATE_INVALID");
 
     private final HttpStatus status;
     private final String code;
