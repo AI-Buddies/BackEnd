@@ -79,14 +79,9 @@ public class UserService {
 
         // TODO: 비밀번호 제약조건이 필요하다면 이곳에 넣기!!
 
-        User newUser = User.builder()
-                .loginId(currentUser.getLoginId())
-                .password(passwordEncoder.encode(changePasswordReq.getNewPassword()))
-                .nickname(currentUser.getNickname())
-                .birthdate(currentUser.getBirthdate())
-                .build();
+        currentUser.updatePassword(passwordEncoder.encode(changePasswordReq.getNewPassword()));
 
-        repository.save(newUser);
+        repository.save(currentUser);
 
         return new UserRes("PASSWORD_CHANGED");
     }
@@ -96,14 +91,9 @@ public class UserService {
 
         User currentUser = authenticateAndGetUser(loginReq);
 
-        User newUser = User.builder()
-                .loginId(currentUser.getLoginId())
-                .password(currentUser.getPassword())
-                .nickname(changeNicknameReq.getNewNickname())
-                .birthdate(currentUser.getBirthdate())
-                .build();
+        currentUser.updateNickname(changeNicknameReq.getNewNickname());
 
-        repository.save(newUser);
+        repository.save(currentUser);
 
         return new UserRes("NICKNAME_CHANGED");
     }
