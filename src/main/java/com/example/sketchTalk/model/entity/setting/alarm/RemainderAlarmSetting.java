@@ -13,7 +13,7 @@ import java.time.LocalTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "remaindersetting")
-public class RemainderSetting {
+public class RemainderAlarmSetting {
     @Id
     @Column(name = "user_id", nullable = false)
     private Long userId;
