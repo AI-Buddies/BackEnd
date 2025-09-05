@@ -26,4 +26,16 @@ public class AudioSetting {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Bgm bgm = Bgm.CALM;
+
+    public void updateVoiceType(VoiceType newVoiceType) {
+        this.voiceType = newVoiceType;
+    }
+
+    public void updateVoiceSpeed(double newVoiceSpeed) {
+        this.voiceSpeed = newVoiceSpeed;
+    }
+
+    public void updateBgm(Bgm newBgm) {
+        this.bgm = newBgm;
+    }
 }
