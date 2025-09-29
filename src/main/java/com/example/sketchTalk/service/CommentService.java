@@ -1,6 +1,7 @@
 package com.example.sketchTalk.service;
 
 import com.example.sketchTalk.dto.comment.in.SaveCommentReq;
+import com.example.sketchTalk.dto.comment.out.ReqContentRes;
 import com.example.sketchTalk.dto.comment.out.SaveCommentRes;
 import com.example.sketchTalk.model.entity.Comment;
 import com.example.sketchTalk.repository.CommentRepository;
@@ -16,5 +17,9 @@ public class CommentService {
         Comment comment = new Comment(saveCommentReq.diaryId(), saveCommentReq.content());
         Comment savedComment = commentRepository.save(comment);
         return new SaveCommentRes(savedComment.getCommentId(), savedComment.getContent());
+    }
+
+    public ReqContentRes reqComment(String diaryContent) {
+        return new ReqContentRes("good!");
     }
 }
