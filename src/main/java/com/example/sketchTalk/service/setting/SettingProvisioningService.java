@@ -30,4 +30,13 @@ public class SettingProvisioningService {
         lookbackAlarmSettingRepository.save(new LookbackAlarmSetting(userId));
         remainderAlarmSettingRepository.save(new RemainderAlarmSetting(userId));
     }
+
+    //UserService.delete() 에서만 호출
+    @Transactional(propagation = Propagation.MANDATORY)
+    public void deleteUserSetting(Long userId) {
+        audioSettingRepository.deleteById(userId);
+        defaultSettingRepository.deleteById(userId);
+        lookbackAlarmSettingRepository.deleteById(userId);
+        remainderAlarmSettingRepository.deleteById(userId);
+    }
 }

@@ -108,10 +108,14 @@ public class UserService {
         return new UserRes("NICKNAME_CHANGED");
     }
 
+    @Transactional
     public UserRes delete(LoginReq loginReq) {
         User user = authenticateAndGetUser(loginReq);
 
         repository.delete(user);
+
+        // 관련 설정 삭제
+        settingProvisioningService.deleteUserSetting(user.getUserId());
 
         return new UserRes("DELETE_SUCCESS");
     }
