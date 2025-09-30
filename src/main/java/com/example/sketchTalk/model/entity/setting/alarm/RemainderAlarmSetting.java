@@ -12,7 +12,7 @@ import java.time.LocalTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "remaindersetting")
+@Table(name = "remainderalarmsetting")
 public class RemainderAlarmSetting {
     @Id
     @Column(name = "user_id", nullable = false)
@@ -30,4 +30,8 @@ public class RemainderAlarmSetting {
     @Enumerated(EnumType.STRING)
     @Column(name = "alarm_unit", nullable = false)
     private AlarmUnit alarmUnit = AlarmUnit.DAY;
+
+    public RemainderAlarmSetting(Long userId) {
+        this.userId = userId;
+    }
 }

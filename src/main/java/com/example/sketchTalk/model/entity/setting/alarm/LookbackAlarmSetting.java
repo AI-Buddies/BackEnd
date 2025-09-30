@@ -1,10 +1,7 @@
 package com.example.sketchTalk.model.entity.setting.alarm;
 
 import com.example.sketchTalk.model.entity.setting.enums.AlarmUnit;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,11 +18,16 @@ public class LookbackAlarmSetting {
     private Long userId;
 
     @Column(name = "can_alarm", nullable = false)
-    private boolean canAlarm;
+    private boolean canAlarm = true;
 
     @Column(name = "alarm_time", nullable = false)
     private LocalTime alarmTime = LocalTime.of(20, 0);
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "lookback_unit", nullable = false)
     private AlarmUnit alarmUnit = AlarmUnit.DAY;
+
+    public LookbackAlarmSetting(Long userId) {
+        this.userId = userId;
+    }
 }

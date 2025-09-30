@@ -24,4 +24,8 @@ public class DefaultSetting {
     public void toggleCanAlarm() {
         this.canAlarm = !this.canAlarm;
     }
+
+    public DefaultSetting(Long userId) {
+        this.userId = userId;
+    }
 }

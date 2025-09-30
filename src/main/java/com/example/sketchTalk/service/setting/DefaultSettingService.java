@@ -1,7 +1,11 @@
 package com.example.sketchTalk.service.setting;
 
-import com.example.sketchTalk.dto.setting.out.DefaultSettingRes;
+import com.example.sketchTalk.dto.setting.in.GetSettingReq;
+import com.example.sketchTalk.dto.setting.out.GetProfileRes;
+import com.example.sketchTalk.exception.user.UserException;
+import com.example.sketchTalk.exception.user.UserExceptions;
 import com.example.sketchTalk.model.entity.User;
+import com.example.sketchTalk.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -9,14 +13,19 @@ import java.time.LocalDate;
 @Service
 public class DefaultSettingService {
     // TODO: 토큰 구현 후 수정
-    User user = null;
+    private final UserRepository userRepository;
 
-    public DefaultSettingRes getUserInformation() {
-        // 토큰 구현 후 관련 로직 추가하기
+    public DefaultSettingService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public GetProfileRes getUserInformation(GetSettingReq req) {
+        User user = userRepository.findByUserId(req.userId())
+                .orElseThrow( () -> new UserException(UserExceptions.ID_NOT_FOUND));
 
         String nickname = user.getNickname();
         LocalDate birthdate = user.getBirthdate();
 
-        return new DefaultSettingRes(nickname, birthdate);
+        return new GetProfileRes(nickname, birthdate);
     }
 }

@@ -27,6 +27,10 @@ public class AudioSetting {
     @Column(nullable = false)
     private Bgm bgm = Bgm.CALM;
 
+    public AudioSetting(Long userId) {
+        this.userId = userId;
+    }
+
     public void updateVoiceType(VoiceType newVoiceType) {
         this.voiceType = newVoiceType;
     }

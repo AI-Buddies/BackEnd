@@ -1,11 +1,7 @@
 package com.example.sketchTalk.model.entity;
 
-
 import com.example.sketchTalk.dto.setting.in.SendInquiryReq;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +14,7 @@ import java.time.LocalDateTime;
 @Table(name = "inquiry")
 public class Inquiry {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "inquiry_id", nullable = false)
     private Long inquiryId;
 

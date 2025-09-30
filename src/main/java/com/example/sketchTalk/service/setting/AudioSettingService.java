@@ -1,8 +1,11 @@
 package com.example.sketchTalk.service.setting;
 
+import com.example.sketchTalk.dto.setting.in.GetSettingReq;
 import com.example.sketchTalk.dto.setting.in.SetAudioSettingReq;
-import com.example.sketchTalk.dto.setting.out.AudioSettingRes;
+import com.example.sketchTalk.dto.setting.out.GetAudioSettingRes;
 import com.example.sketchTalk.dto.setting.out.SettingRes;
+import com.example.sketchTalk.exception.user.UserException;
+import com.example.sketchTalk.exception.user.UserExceptions;
 import com.example.sketchTalk.model.entity.setting.AudioSetting;
 import com.example.sketchTalk.model.entity.setting.enums.Bgm;
 import com.example.sketchTalk.model.entity.setting.enums.VoiceType;
@@ -12,25 +15,27 @@ import org.springframework.stereotype.Service;
 @Service
 public class AudioSettingService {
     // TODO: 토큰 구현 후 수정
-    AudioSetting audioSetting = null;
-
-    AudioSettingRepository audioSettingRepository;
+    private final AudioSettingRepository audioSettingRepository;
 
     public AudioSettingService(AudioSettingRepository audioSettingRepository) {
         this.audioSettingRepository = audioSettingRepository;
     }
 
-    public AudioSettingRes getAudioSetting() {
-        // 토큰 구현 후 관련 로직 추가하기
+    public GetAudioSettingRes getAudioSetting(GetSettingReq req) {
+        AudioSetting audioSetting = audioSettingRepository.findByUserId(req.userId())
+                .orElseThrow( () -> new UserException(UserExceptions.ID_NOT_FOUND));
+
         VoiceType voiceType = audioSetting.getVoiceType();
         double voiceSpeed = audioSetting.getVoiceSpeed();
         Bgm bgm = audioSetting.getBgm();
 
-        return new AudioSettingRes(voiceType, voiceSpeed, bgm);
+        return new GetAudioSettingRes(voiceType, voiceSpeed, bgm);
     }
 
     public SettingRes setAudioSetting(SetAudioSettingReq req) {
-        // 토큰 구현 후 수정하기
+        AudioSetting audioSetting = audioSettingRepository.findByUserId(req.userId())
+                        .orElseThrow( () -> new UserException(UserExceptions.ID_NOT_FOUND));
+
         audioSetting.updateVoiceType(req.voiceType());
         audioSetting.updateVoiceSpeed(req.voiceSpeed());
         audioSetting.updateBgm(req.bgm());
