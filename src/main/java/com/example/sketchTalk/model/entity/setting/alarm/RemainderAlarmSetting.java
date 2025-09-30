@@ -34,4 +34,11 @@ public class RemainderAlarmSetting {
     public RemainderAlarmSetting(Long userId) {
         this.userId = userId;
     }
+
+    public void updateSetting(boolean canAlarm, LocalTime alarmTime, int alarmValue, AlarmUnit alarmUnit) {
+        this.canAlarm = canAlarm;
+        this.alarmTime = alarmTime;
+        this.alarmValue = alarmValue;
+        this.alarmUnit = alarmUnit;
+    }
 }

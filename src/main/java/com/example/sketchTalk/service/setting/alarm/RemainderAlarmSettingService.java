@@ -1,7 +1,9 @@
 package com.example.sketchTalk.service.setting.alarm;
 
 import com.example.sketchTalk.dto.setting.in.GetSettingReq;
+import com.example.sketchTalk.dto.setting.in.SetRemainderAlarmSettingReq;
 import com.example.sketchTalk.dto.setting.out.GetRemainderAlarmSettingRes;
+import com.example.sketchTalk.dto.setting.out.SettingRes;
 import com.example.sketchTalk.exception.user.UserException;
 import com.example.sketchTalk.exception.user.UserExceptions;
 import com.example.sketchTalk.model.entity.setting.alarm.RemainderAlarmSetting;
@@ -29,5 +31,15 @@ public class RemainderAlarmSettingService {
         AlarmUnit alarmUnit = remainderAlarmSetting.getAlarmUnit();
 
         return new GetRemainderAlarmSettingRes(canAlarm, alarmTime, alarmValue, alarmUnit);
+    }
+
+    public SettingRes setRemainderAlarmSetting(SetRemainderAlarmSettingReq req) {
+        RemainderAlarmSetting remainderAlarmSetting = remainderAlarmSettingRepository.findByUserId(req.userId())
+                .orElseThrow( () -> new UserException(UserExceptions.ID_NOT_FOUND));
+
+        remainderAlarmSetting.updateSetting(req.canAlarm(), req.alarmTime(), req.alarmValue(), req.alarmUnit());
+        remainderAlarmSettingRepository.save(remainderAlarmSetting);
+
+        return new SettingRes("UPDATE_SUCCESS");
     }
 }

@@ -1,12 +1,14 @@
 package com.example.sketchTalk.dto.setting.in;
 
-import com.example.sketchTalk.model.entity.setting.enums.Bgm;
-import com.example.sketchTalk.model.entity.setting.enums.VoiceType;
+import com.example.sketchTalk.model.entity.setting.enums.AlarmUnit;
 
-public record SetRemainderAlarmSettingReq (
+import java.time.LocalTime;
+
+public record SetRemainderAlarmSettingReq(
         Long userId,
-        VoiceType voiceType,
-        double voiceSpeed,
-        Bgm bgm
+        boolean canAlarm,
+        LocalTime alarmTime,
+        int alarmValue,
+        AlarmUnit alarmUnit
 ) {
 }

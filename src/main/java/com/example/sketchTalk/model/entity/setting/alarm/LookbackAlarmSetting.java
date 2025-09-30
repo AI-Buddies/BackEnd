@@ -30,4 +30,10 @@ public class LookbackAlarmSetting {
     public LookbackAlarmSetting(Long userId) {
         this.userId = userId;
     }
+
+    public void updateSetting(boolean canAlarm, LocalTime alarmTime, AlarmUnit alarmUnit) {
+        this.canAlarm = canAlarm;
+        this.alarmTime = alarmTime;
+        this.alarmUnit = alarmUnit;
+    }
 }
