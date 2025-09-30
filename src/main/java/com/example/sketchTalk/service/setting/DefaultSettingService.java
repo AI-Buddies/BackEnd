@@ -29,10 +29,14 @@ public class DefaultSettingService {
         User user = userRepository.findByUserId(req.userId())
                 .orElseThrow( () -> new UserException(UserExceptions.ID_NOT_FOUND));
 
+        DefaultSetting defaultSetting = defaultSettingRepository.findByUserId(req.userId())
+                .orElseThrow( () -> new UserException(UserExceptions.ID_NOT_FOUND));
+
         String nickname = user.getNickname();
         LocalDate birthdate = user.getBirthdate();
+        boolean canAlarm = defaultSetting.isCanAlarm();
 
-        return new GetProfileRes(nickname, birthdate);
+        return new GetProfileRes(nickname, birthdate, canAlarm);
     }
 
     @Transactional

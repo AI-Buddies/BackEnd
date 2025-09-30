@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 public record GetProfileRes(
         String nickname,
-        LocalDate birthdate
+        LocalDate birthdate,
+        boolean canAlarm
 ) {
 }
