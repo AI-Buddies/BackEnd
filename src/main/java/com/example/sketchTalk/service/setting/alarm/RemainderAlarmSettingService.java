@@ -3,7 +3,7 @@ package com.example.sketchTalk.service.setting.alarm;
 import com.example.sketchTalk.dto.setting.in.GetSettingReq;
 import com.example.sketchTalk.dto.setting.in.SetRemainderAlarmSettingReq;
 import com.example.sketchTalk.dto.setting.out.GetRemainderAlarmSettingRes;
-import com.example.sketchTalk.dto.setting.out.SettingRes;
+import com.example.sketchTalk.dto.setting.out.SetRemainderAlarmSettingRes;
 import com.example.sketchTalk.exception.setting.SettingException;
 import com.example.sketchTalk.exception.setting.SettingExceptions;
 import com.example.sketchTalk.exception.user.UserException;
@@ -11,6 +11,7 @@ import com.example.sketchTalk.exception.user.UserExceptions;
 import com.example.sketchTalk.model.entity.setting.alarm.RemainderAlarmSetting;
 import com.example.sketchTalk.model.entity.setting.enums.AlarmUnit;
 import com.example.sketchTalk.repository.setting.alarm.RemainderAlarmSettingRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
@@ -23,6 +24,7 @@ public class RemainderAlarmSettingService {
         this.remainderAlarmSettingRepository = remainderAlarmSettingRepository;
     }
 
+    @Transactional
     public GetRemainderAlarmSettingRes getRemainderAlarmSetting(GetSettingReq req) {
         RemainderAlarmSetting remainderAlarmSetting = remainderAlarmSettingRepository.findByUserId(req.userId())
                 .orElseThrow( () -> new UserException(UserExceptions.ID_NOT_FOUND));
@@ -35,7 +37,7 @@ public class RemainderAlarmSettingService {
         return new GetRemainderAlarmSettingRes(canAlarm, alarmTime, alarmValue, alarmUnit);
     }
 
-    public SettingRes setRemainderAlarmSetting(SetRemainderAlarmSettingReq req) {
+    public SetRemainderAlarmSettingRes setRemainderAlarmSetting(SetRemainderAlarmSettingReq req) {
         RemainderAlarmSetting remainderAlarmSetting = remainderAlarmSettingRepository.findByUserId(req.userId())
                 .orElseThrow( () -> new UserException(UserExceptions.ID_NOT_FOUND));
 
@@ -48,6 +50,14 @@ public class RemainderAlarmSettingService {
         remainderAlarmSetting.updateSetting(req.canAlarm(), req.alarmTime(), req.alarmValue(), req.alarmUnit());
         remainderAlarmSettingRepository.save(remainderAlarmSetting);
 
-        return new SettingRes("UPDATE_SUCCESS");
+        SetRemainderAlarmSettingRes setRemainderAlarmSettingRes = SetRemainderAlarmSettingRes.builder()
+                .userId(req.userId())
+                .canAlarm(req.canAlarm())
+                .alarmTime(req.alarmTime())
+                .alarmValue(req.alarmValue())
+                .alarmUnit(req.alarmUnit())
+                .build();
+
+        return setRemainderAlarmSettingRes;
     }
 }

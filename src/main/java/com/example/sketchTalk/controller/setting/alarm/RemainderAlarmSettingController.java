@@ -3,7 +3,7 @@ package com.example.sketchTalk.controller.setting.alarm;
 import com.example.sketchTalk.dto.setting.in.GetSettingReq;
 import com.example.sketchTalk.dto.setting.in.SetRemainderAlarmSettingReq;
 import com.example.sketchTalk.dto.setting.out.GetRemainderAlarmSettingRes;
-import com.example.sketchTalk.dto.setting.out.SettingRes;
+import com.example.sketchTalk.dto.setting.out.SetRemainderAlarmSettingRes;
 import com.example.sketchTalk.service.setting.alarm.RemainderAlarmSettingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +24,9 @@ public class RemainderAlarmSettingController {
     }
 
     @PatchMapping("/setting/notify/remainder")
-    public ResponseEntity<SettingRes> setRemainderAlarmSetting(@RequestBody SetRemainderAlarmSettingReq req) {
-        SettingRes settingRes = remainderAlarmSettingService.setRemainderAlarmSetting(req);
+    public ResponseEntity<SetRemainderAlarmSettingRes> setRemainderAlarmSetting(@RequestBody SetRemainderAlarmSettingReq req) {
+        SetRemainderAlarmSettingRes setRemainderAlarmSettingRes = remainderAlarmSettingService.setRemainderAlarmSetting(req);
 
-        return ResponseEntity.ok(settingRes);
+        return ResponseEntity.ok(setRemainderAlarmSettingRes);
     }
 }

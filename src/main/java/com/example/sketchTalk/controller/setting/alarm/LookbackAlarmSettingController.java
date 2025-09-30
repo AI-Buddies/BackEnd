@@ -3,7 +3,7 @@ package com.example.sketchTalk.controller.setting.alarm;
 import com.example.sketchTalk.dto.setting.in.GetSettingReq;
 import com.example.sketchTalk.dto.setting.in.SetLookbackAlarmSettingReq;
 import com.example.sketchTalk.dto.setting.out.GetLookbackAlarmSettingRes;
-import com.example.sketchTalk.dto.setting.out.SettingRes;
+import com.example.sketchTalk.dto.setting.out.SetLookbackAlarmSettingRes;
 import com.example.sketchTalk.service.setting.alarm.LookbackAlarmSettingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,9 +27,9 @@ public class LookbackAlarmSettingController {
     }
 
     @PatchMapping("/setting/notify/lookback")
-    public ResponseEntity<SettingRes> setLookbackAlarmSetting(@RequestBody SetLookbackAlarmSettingReq req) {
-        SettingRes settingRes = lookbackAlarmSettingService.setLookbackAlarmSetting(req);
+    public ResponseEntity<SetLookbackAlarmSettingRes> setLookbackAlarmSetting(@RequestBody SetLookbackAlarmSettingReq req) {
+        SetLookbackAlarmSettingRes setLookbackAlarmSettingRes = lookbackAlarmSettingService.setLookbackAlarmSetting(req);
 
-        return ResponseEntity.ok(settingRes);
+        return ResponseEntity.ok(setLookbackAlarmSettingRes);
     }
 }

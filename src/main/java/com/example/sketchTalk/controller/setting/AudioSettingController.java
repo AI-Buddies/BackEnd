@@ -3,7 +3,7 @@ package com.example.sketchTalk.controller.setting;
 import com.example.sketchTalk.dto.setting.in.GetSettingReq;
 import com.example.sketchTalk.dto.setting.in.SetAudioSettingReq;
 import com.example.sketchTalk.dto.setting.out.GetAudioSettingRes;
-import com.example.sketchTalk.dto.setting.out.SettingRes;
+import com.example.sketchTalk.dto.setting.out.SetAudioSettingRes;
 import com.example.sketchTalk.service.setting.AudioSettingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,9 +27,9 @@ public class AudioSettingController {
     }
 
     @PatchMapping("/setting/tts")
-    public ResponseEntity<SettingRes> setAudioSetting(@RequestBody SetAudioSettingReq req) {
-        SettingRes settingRes = audioSettingService.setAudioSetting(req);
+    public ResponseEntity<SetAudioSettingRes> setAudioSetting(@RequestBody SetAudioSettingReq req) {
+        SetAudioSettingRes setAudioSettingRes = audioSettingService.setAudioSetting(req);
 
-        return ResponseEntity.ok(settingRes);
+        return ResponseEntity.ok(setAudioSettingRes);
     }
 }

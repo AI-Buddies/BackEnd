@@ -1,6 +1,5 @@
 package com.example.sketchTalk.model.entity.setting;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -8,6 +7,7 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -18,12 +18,9 @@ public class DefaultSetting {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
+    @Setter
     @Column(name = "can_alarm", nullable = false)
     private boolean canAlarm = true;
-
-    public void toggleCanAlarm() {
-        this.canAlarm = !this.canAlarm;
-    }
 
     public DefaultSetting(Long userId) {
         this.userId = userId;

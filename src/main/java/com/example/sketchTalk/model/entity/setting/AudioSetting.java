@@ -21,7 +21,7 @@ public class AudioSetting {
     private VoiceType voiceType = VoiceType.ROBOT;
 
     @Column(name = "voice_speed", nullable = false)
-    private double voiceSpeed = 1.0; // float을 써도 되지 않을까?
+    private double voiceSpeed = 1.0;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -31,15 +31,9 @@ public class AudioSetting {
         this.userId = userId;
     }
 
-    public void updateVoiceType(VoiceType newVoiceType) {
-        this.voiceType = newVoiceType;
-    }
-
-    public void updateVoiceSpeed(double newVoiceSpeed) {
-        this.voiceSpeed = newVoiceSpeed;
-    }
-
-    public void updateBgm(Bgm newBgm) {
-        this.bgm = newBgm;
+    public void updateSetting(VoiceType voiceType, double voiceSpeed, Bgm bgm) {
+        this.voiceType = voiceType;
+        this.voiceSpeed = voiceSpeed;
+        this.bgm = bgm;
     }
 }

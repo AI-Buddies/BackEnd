@@ -1,4 +1,9 @@
 package com.example.sketchTalk.dto.setting.out;
 
-public class SetDefaultSettingRes {
-}
+import lombok.Builder;
+
+@Builder
+public record SetDefaultSettingRes (
+        Long userId,
+        boolean canAlarm
+) {}

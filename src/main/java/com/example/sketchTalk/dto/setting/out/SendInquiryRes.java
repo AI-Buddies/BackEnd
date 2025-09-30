@@ -1,7 +1,11 @@
 package com.example.sketchTalk.dto.setting.out;
 
+import lombok.Builder;
+
+@Builder
 public record SendInquiryRes(
-   boolean isSuccess,
-   String message
+        Long userId,
+        String title,
+        String content
 ) {
 }

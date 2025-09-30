@@ -1,4 +1,14 @@
 package com.example.sketchTalk.dto.setting.out;
 
-public record SetAudioSettingRes() {
+import com.example.sketchTalk.model.entity.setting.enums.Bgm;
+import com.example.sketchTalk.model.entity.setting.enums.VoiceType;
+import lombok.Builder;
+
+@Builder
+public record SetAudioSettingRes(
+        Long userId,
+        VoiceType voiceType,
+        double voiceSpeed,
+        Bgm bgm
+){
 }

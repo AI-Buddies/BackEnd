@@ -3,7 +3,7 @@ package com.example.sketchTalk.service.setting;
 import com.example.sketchTalk.dto.setting.in.GetSettingReq;
 import com.example.sketchTalk.dto.setting.in.SetAudioSettingReq;
 import com.example.sketchTalk.dto.setting.out.GetAudioSettingRes;
-import com.example.sketchTalk.dto.setting.out.SettingRes;
+import com.example.sketchTalk.dto.setting.out.SetAudioSettingRes;
 import com.example.sketchTalk.exception.setting.SettingException;
 import com.example.sketchTalk.exception.setting.SettingExceptions;
 import com.example.sketchTalk.exception.user.UserException;
@@ -12,6 +12,7 @@ import com.example.sketchTalk.model.entity.setting.AudioSetting;
 import com.example.sketchTalk.model.entity.setting.enums.Bgm;
 import com.example.sketchTalk.model.entity.setting.enums.VoiceType;
 import com.example.sketchTalk.repository.setting.AudioSettingRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,7 +34,8 @@ public class AudioSettingService {
         return new GetAudioSettingRes(voiceType, voiceSpeed, bgm);
     }
 
-    public SettingRes setAudioSetting(SetAudioSettingReq req) {
+    @Transactional
+    public SetAudioSettingRes setAudioSetting(SetAudioSettingReq req) {
         AudioSetting audioSetting = audioSettingRepository.findByUserId(req.userId())
                         .orElseThrow( () -> new UserException(UserExceptions.ID_NOT_FOUND));
 
@@ -42,12 +44,16 @@ public class AudioSettingService {
             throw new SettingException(SettingExceptions.INVALID_VALUE);
         }
 
-        audioSetting.updateVoiceType(req.voiceType());
-        audioSetting.updateVoiceSpeed(req.voiceSpeed());
-        audioSetting.updateBgm(req.bgm());
-
+        audioSetting.updateSetting(req.voiceType(), req.voiceSpeed(), req.bgm());
         audioSettingRepository.save(audioSetting);
 
-        return new SettingRes("UPDATE_SUCCESS");
+        SetAudioSettingRes setAudioSettingRes = SetAudioSettingRes.builder()
+                .userId(req.userId())
+                .voiceType(req.voiceType())
+                .voiceSpeed(req.voiceSpeed())
+                .bgm(req.bgm())
+                .build();
+
+        return setAudioSettingRes;
     }
 }

@@ -1,6 +1,5 @@
 package com.example.sketchTalk.model.entity.setting.alarm;
 
-
 import com.example.sketchTalk.model.entity.setting.enums.AlarmUnit;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
