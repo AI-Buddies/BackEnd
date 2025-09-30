@@ -4,6 +4,8 @@ import com.example.sketchTalk.dto.setting.in.GetSettingReq;
 import com.example.sketchTalk.dto.setting.in.SetAudioSettingReq;
 import com.example.sketchTalk.dto.setting.out.GetAudioSettingRes;
 import com.example.sketchTalk.dto.setting.out.SettingRes;
+import com.example.sketchTalk.exception.setting.SettingException;
+import com.example.sketchTalk.exception.setting.SettingExceptions;
 import com.example.sketchTalk.exception.user.UserException;
 import com.example.sketchTalk.exception.user.UserExceptions;
 import com.example.sketchTalk.model.entity.setting.AudioSetting;
@@ -14,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AudioSettingService {
-    // TODO: 토큰 구현 후 수정
     private final AudioSettingRepository audioSettingRepository;
 
     public AudioSettingService(AudioSettingRepository audioSettingRepository) {
@@ -35,6 +36,11 @@ public class AudioSettingService {
     public SettingRes setAudioSetting(SetAudioSettingReq req) {
         AudioSetting audioSetting = audioSettingRepository.findByUserId(req.userId())
                         .orElseThrow( () -> new UserException(UserExceptions.ID_NOT_FOUND));
+
+        // 설정값 유효성 체크
+        if (req.voiceSpeed() <= 0.0 || 2.0 < req.voiceSpeed()) {
+            throw new SettingException(SettingExceptions.INVALID_VALUE);
+        }
 
         audioSetting.updateVoiceType(req.voiceType());
         audioSetting.updateVoiceSpeed(req.voiceSpeed());
