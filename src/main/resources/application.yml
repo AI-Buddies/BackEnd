@@ -24,6 +24,10 @@ spring:
     expiration:
       ms: ${JWT_EXPIRATION_MS}
 
+  refresh:
+    duration:
+      ms: ${REFRESH_DURATION_MS}
+
   servlet:
     multipart:
       enabled: true
