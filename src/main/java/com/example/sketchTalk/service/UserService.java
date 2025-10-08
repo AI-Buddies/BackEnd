@@ -9,6 +9,7 @@ import com.example.sketchTalk.dto.user.out.RegisterRes;
 import com.example.sketchTalk.dto.user.out.UserRes;
 import com.example.sketchTalk.exception.user.UserException;
 import com.example.sketchTalk.exception.user.UserExceptions;
+import com.example.sketchTalk.model.entity.RefreshToken;
 import com.example.sketchTalk.model.entity.User;
 import com.example.sketchTalk.repository.UserRepository;
 
@@ -26,6 +27,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     private final SettingProvisioningService settingProvisioningService;
+    private final RefreshTokenService refreshTokenService;
 
     private final JwtUtils jwtUtils;
 
@@ -33,11 +35,13 @@ public class UserService {
             UserRepository repository,
             PasswordEncoder passwordEncoder,
             SettingProvisioningService settingProvisioningService,
+            RefreshTokenService refreshTokenService,
             JwtUtils jwtUtils) {
 
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
         this.settingProvisioningService = settingProvisioningService;
+        this.refreshTokenService = refreshTokenService;
         this.jwtUtils = jwtUtils;
     }
 
@@ -52,12 +56,14 @@ public class UserService {
         return user;
     }
 
+    @Transactional
     public LoginRes login(LoginReq loginReq) {
         User user = authenticateAndGetUser(loginReq);
 
         String accessToken = jwtUtils.generateJwtToken(user.getUserId());
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getUserId());
 
-        return new LoginRes(accessToken);
+        return new LoginRes(accessToken, refreshToken.getToken());
     }
 
     @Transactional
@@ -88,10 +94,11 @@ public class UserService {
         // 3. 기본 Setting 값 설정
         settingProvisioningService.provisionDefaultSetting(newUser.getUserId());
 
-        // 4. JWT
+        // 4. 토큰 발급
         String accessToken = jwtUtils.generateJwtToken(newUser.getUserId());
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(newUser.getUserId());
 
-        return new RegisterRes(accessToken);
+        return new RegisterRes(accessToken, refreshToken.getToken());
     }
 
     // TODO: 로그아웃 추가
