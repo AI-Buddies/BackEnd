@@ -44,8 +44,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (InvalidJwtAuthenticationException e) {
+            request.setAttribute("authErrorMessage", e.getMessage());
             throw new BadCredentialsException(e.getMessage(), e);
-
         }
 
         filterChain.doFilter(request, response);

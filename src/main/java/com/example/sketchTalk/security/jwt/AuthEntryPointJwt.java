@@ -37,11 +37,10 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 
         final Map<String, Object> body = new HashMap<>();
 
-        // TODO: body 양식 맞추기
-        body.put("statusCode", HttpServletResponse.SC_UNAUTHORIZED);
-        body.put("message", e.getMessage());
-        body.put("data", request.getServletPath());
         body.put("isSuccess", false);
+        body.put("statusCode", HttpServletResponse.SC_UNAUTHORIZED);
+        body.put("message", "유효한 토큰을 제공해주세요.");
+        body.put("data", request.getServletPath());
 
         // JSON 직렬화
         objectMapper.writeValue(response.getWriter(), body);
