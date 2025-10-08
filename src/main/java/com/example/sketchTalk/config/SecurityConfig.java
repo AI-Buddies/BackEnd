@@ -1,40 +1,65 @@
 package com.example.sketchTalk.config;
 
+import com.example.sketchTalk.security.jwt.AuthEntryPointJwt;
+import com.example.sketchTalk.security.jwt.AuthTokenFilter;
+import com.example.sketchTalk.security.jwt.JwtUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthEntryPointJwt authEntryPointJwt, JwtUtils jwtUtils) throws Exception {
+
+        // CSRF 비활성화, CORS 활성화
+        http
+                .csrf(csrf -> csrf.disable())
+                .cors(Customizer.withDefaults());
+
+        // 세션을 생성하지 않음
+        http
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        http
+                .exceptionHandling(e -> e.authenticationEntryPoint(authEntryPointJwt));
+
+        // URL 접근
+        http
+                .authorizeHttpRequests((auth -> auth
+                        // 다른 도메인도 허용
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // 인증 필요 없는 엔드포인트
+                        .requestMatchers(
+                                "/user/register",
+                                "/user/login",
+                                "/health"
+                        ).permitAll()
+
+                        // 그 외 인증 필요
+                        .anyRequest().authenticated()
+                ));
+
+        // JWT Filter -> UsernamePasswordAuthentication Filter
+        http
+                .addFilterBefore(new AuthTokenFilter(jwtUtils), UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    /**
-     * Spring Security의 필터 체인 설정
-     * - CSRF 보호 비활성화 (테스트/간단한 API 서버용)
-     * - 모든 요청을 허용 (권한 검사 안함)
-     * - 기본 로그인 폼 비활성화 (로그인 화면 필요 없을 때)
-     */
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        // TODO: 배포 시 지우기!
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                // 모든 요청을 인증 없이 허용
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
-                )
-                .formLogin(AbstractHttpConfigurer::disable);
-
-        return http.build();
     }
 }

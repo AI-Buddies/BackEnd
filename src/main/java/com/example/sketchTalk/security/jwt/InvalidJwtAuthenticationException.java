@@ -1,4 +1,9 @@
 package com.example.sketchTalk.security.jwt;
 
-public class InvalidJwtAuthenticationException {
+import org.springframework.security.core.AuthenticationException;
+
+public class InvalidJwtAuthenticationException extends AuthenticationException {
+    public InvalidJwtAuthenticationException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
