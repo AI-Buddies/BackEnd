@@ -1,4 +1,6 @@
 package com.example.sketchTalk.dto.user.out;
 
-public class LoginRes {
+public record LoginRes(
+        String accessToken
+) {
 }

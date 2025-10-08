@@ -5,6 +5,8 @@ import com.example.sketchTalk.dto.user.in.ChangeNicknameReq;
 import com.example.sketchTalk.dto.user.in.ChangePasswordReq;
 import com.example.sketchTalk.dto.user.in.LoginReq;
 import com.example.sketchTalk.dto.user.in.RegisterReq;
+import com.example.sketchTalk.dto.user.out.LoginRes;
+import com.example.sketchTalk.dto.user.out.RegisterRes;
 import com.example.sketchTalk.dto.user.out.UserRes;
 import com.example.sketchTalk.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +22,14 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserRes> login(@RequestBody LoginReq loginReq) {
-        UserRes result = service.login(loginReq);
+    public ResponseEntity<LoginRes> login(@RequestBody LoginReq loginReq) {
+        LoginRes result = service.login(loginReq);
         return ResponseEntity.ok(result);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserRes> register(@RequestBody RegisterReq registerReq) {
-        UserRes result = service.register(registerReq);
+    public ResponseEntity<RegisterRes> register(@RequestBody RegisterReq registerReq) {
+        RegisterRes result = service.register(registerReq);
         return ResponseEntity.ok(result);
     }
 
