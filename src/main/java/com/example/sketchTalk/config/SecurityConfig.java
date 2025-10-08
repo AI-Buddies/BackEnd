@@ -42,6 +42,7 @@ public class SecurityConfig {
 
                         // 인증 필요 없는 엔드포인트
                         .requestMatchers(
+                                "/error",
                                 "/health",
                                 "/user/register",
                                 "/user/login",

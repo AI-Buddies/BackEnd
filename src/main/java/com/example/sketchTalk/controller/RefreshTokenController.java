@@ -4,7 +4,7 @@ import com.example.sketchTalk.dto.refreshToken.RefreshReq;
 import com.example.sketchTalk.dto.refreshToken.RefreshRes;
 import com.example.sketchTalk.service.RefreshTokenService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +17,7 @@ public class RefreshTokenController {
         this.refreshTokenService = refreshTokenService;
     }
 
-    @GetMapping("/refresh")
+    @PostMapping("/refresh")
     public ResponseEntity<RefreshRes> reIssueAccessToken(@RequestBody RefreshReq refreshReq) {
         RefreshRes refreshTokenRes = refreshTokenService.reissueAccessToken(refreshReq);
 
