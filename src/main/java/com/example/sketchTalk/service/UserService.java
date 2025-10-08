@@ -9,6 +9,9 @@ import com.example.sketchTalk.exception.user.UserException;
 import com.example.sketchTalk.exception.user.UserExceptions;
 import com.example.sketchTalk.model.entity.User;
 import com.example.sketchTalk.repository.UserRepository;
+
+import com.example.sketchTalk.service.setting.SettingProvisioningService;
+import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +22,12 @@ public class UserService {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository repository, PasswordEncoder passwordEncoder) {
+    private final SettingProvisioningService settingProvisioningService;
+
+    public UserService(UserRepository repository, PasswordEncoder passwordEncoder, SettingProvisioningService settingProvisioningService) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
+        this.settingProvisioningService = settingProvisioningService;
     }
 
     public User authenticateAndGetUser(LoginReq loginReq) {
@@ -43,6 +49,7 @@ public class UserService {
         return new UserRes("LOGIN_SUCCESS");
     }
 
+    @Transactional
     public UserRes register(RegisterReq registerReq) {
 
         // 1. 중복 ID 확인
@@ -66,6 +73,9 @@ public class UserService {
                 .build();
 
         repository.save(newUser);
+
+        // 3. 기본 Setting 값 설정
+        settingProvisioningService.provisionDefaultSetting(newUser.getUserId());
 
         return new UserRes("REGISTER_SUCCESS");
     }
@@ -98,10 +108,14 @@ public class UserService {
         return new UserRes("NICKNAME_CHANGED");
     }
 
+    @Transactional
     public UserRes delete(LoginReq loginReq) {
         User user = authenticateAndGetUser(loginReq);
 
         repository.delete(user);
+
+        // 관련 설정 삭제
+        settingProvisioningService.deleteUserSetting(user.getUserId());
 
         return new UserRes("DELETE_SUCCESS");
     }
