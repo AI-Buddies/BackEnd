@@ -29,10 +29,10 @@ public class DiaryService {
         Diary savedDiary = diaryRepository.save(diary);
 
         ReqContentRes writtenComment = commentService.reqComment(diary.getContent());
-        SaveCommentReq saveCommentReq = new SaveCommentReq(savedDiary.getDiaryId(), writtenComment.content());
-        SaveCommentRes saveCommentRes = commentService.putComment(saveCommentReq);
+//        SaveCommentReq saveCommentReq = new SaveCommentReq(savedDiary.getDiaryId(), writtenComment.content());
+//        SaveCommentRes saveCommentRes = commentService.putComment(saveCommentReq);
 
-        return new SaveDiaryRes(savedDiary.getDiaryId(), saveCommentRes.commentId());
+        return new SaveDiaryRes(savedDiary.getDiaryId(), savedDiary.getTitle(), savedDiary.getContent(), savedDiary.getEmotion());
     }
 
     @Transactional
@@ -44,11 +44,10 @@ public class DiaryService {
 
         ModifyDiaryRes modifyDiaryRes = ModifyDiaryRes.builder()
                 .diaryId(diary.getDiaryId())
-                .userId(diary.getUserId())
-                .title(diary.getTitle())
-                .content(diary.getContent())
                 .date(diary.getDate())
+                .title(diary.getTitle())
                 .emotion(diary.getEmotion())
+                .content(diary.getContent())
                 .build();
         return modifyDiaryRes;
     }

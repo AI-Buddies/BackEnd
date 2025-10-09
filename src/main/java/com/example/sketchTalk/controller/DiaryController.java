@@ -19,7 +19,7 @@ public class DiaryController {
     @PostMapping("/save")
     public ApiResponse<SaveDiaryRes> saveDiary(@RequestBody SaveDiaryReq req) {
         SaveDiaryRes saveDiaryRes = diaryService.putDiary(req);
-        return ApiResponse.onSuccess(HttpStatus.OK, saveDiaryRes);
+        return ApiResponse.onSuccess(HttpStatus.CREATED, saveDiaryRes);
     }
 
     @PutMapping("/")
