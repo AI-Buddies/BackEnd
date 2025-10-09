@@ -1,6 +1,5 @@
 package com.example.sketchTalk.controller;
 
-import com.example.sketchTalk.dto.ResponseDTO;
 import com.example.sketchTalk.dto.user.in.ChangeNicknameReq;
 import com.example.sketchTalk.dto.user.in.ChangePasswordReq;
 import com.example.sketchTalk.dto.user.in.LoginReq;
