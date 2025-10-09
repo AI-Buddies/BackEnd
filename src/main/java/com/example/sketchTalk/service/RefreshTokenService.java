@@ -1,8 +1,9 @@
 package com.example.sketchTalk.service;
 
+import com.example.sketchTalk._core.error.CustomException;
 import com.example.sketchTalk.dto.refreshToken.RefreshReq;
 import com.example.sketchTalk.dto.refreshToken.RefreshRes;
-import com.example.sketchTalk.exception.refreshToken.RefreshTokenException;
+import com.example.sketchTalk.exception.token.RtExceptions;
 import com.example.sketchTalk.model.entity.RefreshToken;
 import com.example.sketchTalk.repository.RefreshTokenRepository;
 import com.example.sketchTalk.security.jwt.JwtUtils;
@@ -37,7 +38,7 @@ public class RefreshTokenService {
             // 만료 토큰 청소
             refreshTokenRepository.deleteByUserId(refreshToken.getUserId());
 
-            throw new RefreshTokenException();
+            throw new CustomException(RtExceptions.INVALID_TOKEN);
         }
     }
 
@@ -58,7 +59,7 @@ public class RefreshTokenService {
     public RefreshRes reissueAccessToken(RefreshReq refreshReq) {
         // 1. 토큰 찾기
         RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshReq.refreshToken())
-                .orElseThrow( () -> new RefreshTokenException());
+                .orElseThrow( () -> new CustomException(RtExceptions.INVALID_TOKEN));
 
         // 2. 만료일 확인
         validateNotExpired(refreshToken);

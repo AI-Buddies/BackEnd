@@ -1,5 +1,7 @@
 package com.example.sketchTalk.security.jwt;
 
+import com.example.sketchTalk._core.error.CustomException;
+import com.example.sketchTalk.exception.token.JwtExceptions;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -53,26 +55,13 @@ public class JwtUtils {
 
     // 토큰 검증
     // 유효하면 아무것도 반환하지 않고 통과
-    // 실패하면 AuthenticationException을 던진다.
-    public void validateJwtToken(String token) throws InvalidJwtAuthenticationException {
+    // 실패하면 CustomException을 던진다.
+    public void validateJwtToken(String token) throws CustomException {
         try {
             parser.parseClaimsJws(token);
 
-        } catch (MalformedJwtException e) {
-            throw new InvalidJwtAuthenticationException("잘못된 JWT 형식입니다.", e);
-
-        } catch (ExpiredJwtException e) {
-            throw new InvalidJwtAuthenticationException("JWT 토큰이 만료되었습니다.", e);
-
-        } catch (UnsupportedJwtException e) {
-            throw new InvalidJwtAuthenticationException("지원하지 않는 JWT 형식입니다.", e);
-
-        } catch (IllegalArgumentException e) {
-            throw new InvalidJwtAuthenticationException("JWT 클레임이 비어 있습니다.", e);
-
-        } catch (JwtException e) {
-            throw new InvalidJwtAuthenticationException("JWT 검증 실패", e);
-
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new CustomException(JwtExceptions.from(e));
         }
     }
 }

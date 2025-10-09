@@ -13,11 +13,17 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Bean
+    public AuthTokenFilter authTokenFilter(JwtUtils jwtUtils) {
+        return new AuthTokenFilter(jwtUtils);
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthEntryPointJwt authEntryPointJwt, JwtUtils jwtUtils) throws Exception {
@@ -53,9 +59,9 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 ));
 
-        // JWT Filter -> UsernamePasswordAuthentication Filter
         http
-                .addFilterBefore(new AuthTokenFilter(jwtUtils), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAfter(authTokenFilter(jwtUtils), ExceptionTranslationFilter.class);
+
 
         return http.build();
     }

@@ -1,9 +1,12 @@
 package com.example.sketchTalk.security.jwt;
 
+import com.example.sketchTalk._core.error.CustomException;
+import com.example.sketchTalk.exception.token.JwtExceptions;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.context.annotation.Bean;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,9 +46,14 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 // 4. 저장
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        } catch (InvalidJwtAuthenticationException e) {
-            request.setAttribute("authErrorMessage", e.getMessage());
-            throw new BadCredentialsException(e.getMessage(), e);
+
+        } catch (Throwable t) {
+            var ec = JwtExceptions.from(t);
+
+            SecurityContextHolder.clearContext();
+
+            // AuthenticationException 호출 -> AuthEntryPointJwt 호출
+            throw new BadCredentialsException(ec.getMessage(), new CustomException(ec));
         }
 
         filterChain.doFilter(request, response);
