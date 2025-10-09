@@ -31,10 +31,10 @@ public class UserService {
     }
 
     public User authenticateAndGetUser(LoginReq loginReq) {
-        User user = repository.findByLoginId(loginReq.getLoginId())
+        User user = repository.findByLoginId(loginReq.loginId())
                 .orElseThrow( () -> new UserException(UserExceptions.ID_NOT_FOUND));
 
-        if (!passwordEncoder.matches(loginReq.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(loginReq.password(), user.getPassword())) {
             throw new UserException(UserExceptions.PASSWORD_MISMATCH);
         }
 
@@ -53,7 +53,7 @@ public class UserService {
     public UserRes register(RegisterReq registerReq) {
 
         // 1. 중복 ID 확인
-        repository.findByLoginId(registerReq.getLoginId())
+        repository.findByLoginId(registerReq.loginId())
                 .ifPresent(user -> {
                     throw new UserException(UserExceptions.ID_ALREADY_EXISTS);
                 });
@@ -61,15 +61,15 @@ public class UserService {
         // TODO: 비밀번호 제약조건이 필요하다면 이곳에 넣기!!
 
         // 2. 생년월일 타당성 확인
-        if (registerReq.getBirthdate().isAfter(LocalDate.now())) {
+        if (registerReq.birthdate().isAfter(LocalDate.now())) {
             throw new UserException(UserExceptions.BIRTHDATE_INVALID);
         }
 
         User newUser = User.builder()
-                .loginId(registerReq.getLoginId())
-                .password(passwordEncoder.encode(registerReq.getPassword()))
-                .nickname(registerReq.getNickname())
-                .birthdate(registerReq.getBirthdate())
+                .loginId(registerReq.loginId())
+                .password(passwordEncoder.encode(registerReq.password()))
+                .nickname(registerReq.nickname())
+                .birthdate(registerReq.birthdate())
                 .build();
 
         repository.save(newUser);
@@ -83,13 +83,13 @@ public class UserService {
     // TODO: 로그아웃 추가
 
     public UserRes changePassword(ChangePasswordReq changePasswordReq) {
-        LoginReq loginReq = new LoginReq(changePasswordReq.getLoginId(), changePasswordReq.getOldPassword());
+        LoginReq loginReq = new LoginReq(changePasswordReq.loginId(), changePasswordReq.oldPassword());
 
         User currentUser = authenticateAndGetUser(loginReq);
 
         // TODO: 비밀번호 제약조건이 필요하다면 이곳에 넣기!!
 
-        currentUser.updatePassword(passwordEncoder.encode(changePasswordReq.getNewPassword()));
+        currentUser.updatePassword(passwordEncoder.encode(changePasswordReq.newPassword()));
 
         repository.save(currentUser);
 
@@ -97,11 +97,11 @@ public class UserService {
     }
 
     public UserRes changeNickname(ChangeNicknameReq changeNicknameReq) {
-        LoginReq loginReq = new LoginReq(changeNicknameReq.getLoginId(), changeNicknameReq.getPassword());
+        LoginReq loginReq = new LoginReq(changeNicknameReq.loginId(), changeNicknameReq.password());
 
         User currentUser = authenticateAndGetUser(loginReq);
 
-        currentUser.updateNickname(changeNicknameReq.getNewNickname());
+        currentUser.updateNickname(changeNicknameReq.newNickname());
 
         repository.save(currentUser);
 
