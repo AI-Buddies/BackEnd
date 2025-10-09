@@ -1,5 +1,7 @@
 package com.example.sketchTalk.controller.setting;
 
+import com.example.sketchTalk._core.common.ApiResponse;
+import com.example.sketchTalk._core.common.ApiResponseUtils;
 import com.example.sketchTalk.dto.setting.in.GetSettingReq;
 import com.example.sketchTalk.dto.setting.in.SetAudioSettingReq;
 import com.example.sketchTalk.dto.setting.out.GetAudioSettingRes;
@@ -20,16 +22,16 @@ public class AudioSettingController {
     }
 
     @GetMapping("/setting/tts")
-    public ResponseEntity<GetAudioSettingRes> getAudioSetting(@RequestBody GetSettingReq req) {
-        GetAudioSettingRes getAudioSettingRes = audioSettingService.getAudioSetting(req);
+    public ResponseEntity<ApiResponse<GetAudioSettingRes>> getAudioSetting(@RequestBody GetSettingReq req) {
+        GetAudioSettingRes result = audioSettingService.getAudioSetting(req);
 
-        return ResponseEntity.ok(getAudioSettingRes);
+        return ApiResponseUtils.ok(result);
     }
 
     @PatchMapping("/setting/tts")
-    public ResponseEntity<SetAudioSettingRes> setAudioSetting(@RequestBody SetAudioSettingReq req) {
-        SetAudioSettingRes setAudioSettingRes = audioSettingService.setAudioSetting(req);
+    public ResponseEntity<ApiResponse<SetAudioSettingRes>> setAudioSetting(@RequestBody SetAudioSettingReq req) {
+        SetAudioSettingRes result = audioSettingService.setAudioSetting(req);
 
-        return ResponseEntity.ok(setAudioSettingRes);
+        return ApiResponseUtils.ok(result);
     }
 }

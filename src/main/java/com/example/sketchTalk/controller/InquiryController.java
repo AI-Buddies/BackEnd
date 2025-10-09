@@ -1,5 +1,7 @@
 package com.example.sketchTalk.controller;
 
+import com.example.sketchTalk._core.common.ApiResponse;
+import com.example.sketchTalk._core.common.ApiResponseUtils;
 import com.example.sketchTalk.dto.setting.in.SendInquiryReq;
 import com.example.sketchTalk.dto.setting.out.SendInquiryRes;
 import com.example.sketchTalk.service.InquiryService;
@@ -17,9 +19,9 @@ public class InquiryController {
     }
 
     @PostMapping("/setting/inquiry")
-    public ResponseEntity<SendInquiryRes> sendInquiry(@RequestBody SendInquiryReq req) {
-        SendInquiryRes sendInquiryRes = inquiryService.sendInquiry(req);
+    public ResponseEntity<ApiResponse<SendInquiryRes>> sendInquiry(@RequestBody SendInquiryReq req) {
+        SendInquiryRes result = inquiryService.sendInquiry(req);
 
-        return ResponseEntity.ok(sendInquiryRes);
+        return ApiResponseUtils.ok(result);
     }
 }

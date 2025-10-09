@@ -1,5 +1,7 @@
 package com.example.sketchTalk.controller.setting;
 
+import com.example.sketchTalk._core.common.ApiResponse;
+import com.example.sketchTalk._core.common.ApiResponseUtils;
 import com.example.sketchTalk.dto.setting.in.GetSettingReq;
 import com.example.sketchTalk.dto.setting.in.SetDefaultSettingReq;
 import com.example.sketchTalk.dto.setting.out.GetProfileRes;
@@ -20,16 +22,16 @@ public class DefaultSettingController {
     }
 
     @GetMapping("/setting")
-    public ResponseEntity<GetProfileRes> getUserInformation(@RequestBody GetSettingReq req) {
-        GetProfileRes getProfileRes = defaultSettingService.getUserInformation(req);
+    public ResponseEntity<ApiResponse<GetProfileRes>> getUserInformation(@RequestBody GetSettingReq req) {
+        GetProfileRes result = defaultSettingService.getUserInformation(req);
 
-        return ResponseEntity.ok(getProfileRes);
+        return ApiResponseUtils.ok(result);
     }
 
     @PatchMapping("/setting")
-    public ResponseEntity<SetDefaultSettingRes> SetDefaultAlarm(@RequestBody SetDefaultSettingReq req) {
-        SetDefaultSettingRes setDefaultSettingRes = defaultSettingService.SetDefaultAlarm(req);
+    public ResponseEntity<ApiResponse<SetDefaultSettingRes>> SetDefaultAlarm(@RequestBody SetDefaultSettingReq req) {
+        SetDefaultSettingRes result = defaultSettingService.SetDefaultAlarm(req);
 
-        return ResponseEntity.ok(setDefaultSettingRes);
+        return ApiResponseUtils.ok(result);
     }
 }

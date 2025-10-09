@@ -1,5 +1,7 @@
 package com.example.sketchTalk.controller.setting.alarm;
 
+import com.example.sketchTalk._core.common.ApiResponse;
+import com.example.sketchTalk._core.common.ApiResponseUtils;
 import com.example.sketchTalk.dto.setting.in.GetSettingReq;
 import com.example.sketchTalk.dto.setting.in.SetRemainderAlarmSettingReq;
 import com.example.sketchTalk.dto.setting.out.GetRemainderAlarmSettingRes;
@@ -17,16 +19,16 @@ public class RemainderAlarmSettingController {
     }
 
     @GetMapping("/setting/notify/remainder")
-    public ResponseEntity<GetRemainderAlarmSettingRes> getRemainderAlarmSetting(@RequestBody GetSettingReq req) {
-        GetRemainderAlarmSettingRes getRemainderAlarmSettingRes = remainderAlarmSettingService.getRemainderAlarmSetting(req);
+    public ResponseEntity<ApiResponse<GetRemainderAlarmSettingRes>> getRemainderAlarmSetting(@RequestBody GetSettingReq req) {
+        GetRemainderAlarmSettingRes result = remainderAlarmSettingService.getRemainderAlarmSetting(req);
 
-        return ResponseEntity.ok(getRemainderAlarmSettingRes);
+        return ApiResponseUtils.ok(result);
     }
 
     @PatchMapping("/setting/notify/remainder")
-    public ResponseEntity<SetRemainderAlarmSettingRes> setRemainderAlarmSetting(@RequestBody SetRemainderAlarmSettingReq req) {
-        SetRemainderAlarmSettingRes setRemainderAlarmSettingRes = remainderAlarmSettingService.setRemainderAlarmSetting(req);
+    public ResponseEntity<ApiResponse<SetRemainderAlarmSettingRes>> setRemainderAlarmSetting(@RequestBody SetRemainderAlarmSettingReq req) {
+        SetRemainderAlarmSettingRes result = remainderAlarmSettingService.setRemainderAlarmSetting(req);
 
-        return ResponseEntity.ok(setRemainderAlarmSettingRes);
+        return ApiResponseUtils.ok(result);
     }
 }

@@ -1,5 +1,7 @@
 package com.example.sketchTalk.controller.setting.alarm;
 
+import com.example.sketchTalk._core.common.ApiResponse;
+import com.example.sketchTalk._core.common.ApiResponseUtils;
 import com.example.sketchTalk.dto.setting.in.GetSettingReq;
 import com.example.sketchTalk.dto.setting.in.SetLookbackAlarmSettingReq;
 import com.example.sketchTalk.dto.setting.out.GetLookbackAlarmSettingRes;
@@ -20,16 +22,16 @@ public class LookbackAlarmSettingController {
     }
 
     @GetMapping("/setting/notify/lookback")
-    public ResponseEntity<GetLookbackAlarmSettingRes> getLookbackAlarmSetting(@RequestBody GetSettingReq req) {
-        GetLookbackAlarmSettingRes getLookbackAlarmSettingRes = lookbackAlarmSettingService.getLookbackAlarmSetting(req);
+    public ResponseEntity<ApiResponse<GetLookbackAlarmSettingRes>> getLookbackAlarmSetting(@RequestBody GetSettingReq req) {
+        GetLookbackAlarmSettingRes result = lookbackAlarmSettingService.getLookbackAlarmSetting(req);
 
-        return ResponseEntity.ok(getLookbackAlarmSettingRes);
+        return ApiResponseUtils.ok(result);
     }
 
     @PatchMapping("/setting/notify/lookback")
-    public ResponseEntity<SetLookbackAlarmSettingRes> setLookbackAlarmSetting(@RequestBody SetLookbackAlarmSettingReq req) {
-        SetLookbackAlarmSettingRes setLookbackAlarmSettingRes = lookbackAlarmSettingService.setLookbackAlarmSetting(req);
+    public ResponseEntity<ApiResponse<SetLookbackAlarmSettingRes>> setLookbackAlarmSetting(@RequestBody SetLookbackAlarmSettingReq req) {
+        SetLookbackAlarmSettingRes result = lookbackAlarmSettingService.setLookbackAlarmSetting(req);
 
-        return ResponseEntity.ok(setLookbackAlarmSettingRes);
+        return ApiResponseUtils.ok(result);
     }
 }
