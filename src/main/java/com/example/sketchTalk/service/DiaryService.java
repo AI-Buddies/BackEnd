@@ -1,5 +1,6 @@
 package com.example.sketchTalk.service;
 
+import com.example.sketchTalk._core.error.CustomException;
 import com.example.sketchTalk.dto.comment.in.SaveCommentReq;
 import com.example.sketchTalk.dto.comment.out.ReqContentRes;
 import com.example.sketchTalk.dto.comment.out.SaveCommentRes;
@@ -7,8 +8,7 @@ import com.example.sketchTalk.dto.diary.in.ModifyDiaryReq;
 import com.example.sketchTalk.dto.diary.in.SaveDiaryReq;
 import com.example.sketchTalk.dto.diary.out.ModifyDiaryRes;
 import com.example.sketchTalk.dto.diary.out.SaveDiaryRes;
-import com.example.sketchTalk.exception.diary.DiaryNotFoundException;
-import com.example.sketchTalk.model.entity.Comment;
+import com.example.sketchTalk.exception.diary.DiaryExceptions;
 import com.example.sketchTalk.model.entity.Diary;
 import com.example.sketchTalk.repository.DiaryRepository;
 import jakarta.transaction.Transactional;
@@ -38,7 +38,7 @@ public class DiaryService {
     @Transactional
     public ModifyDiaryRes changeDiary(ModifyDiaryReq modifyDiaryReq) {
         //다이어리 찾기
-        Diary diary = diaryRepository.findById(modifyDiaryReq.diaryId()).orElseThrow(()->new DiaryNotFoundException(modifyDiaryReq.diaryId()));
+        Diary diary = diaryRepository.findById(modifyDiaryReq.diaryId()).orElseThrow(()->new CustomException(DiaryExceptions.DIARY_NOT_FOUND, modifyDiaryReq.diaryId()));
         diary.rewriteDiary(modifyDiaryReq.title(), modifyDiaryReq.content(), modifyDiaryReq.emotion());
         diaryRepository.save(diary);
 
