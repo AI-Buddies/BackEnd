@@ -42,11 +42,9 @@ public class UserService {
     }
 
     public UserRes login(LoginReq loginReq) {
+        User user = authenticateAndGetUser(loginReq);
 
-        // 반환받지 않고 authenticate
-        authenticateAndGetUser(loginReq);
-
-        return new UserRes("LOGIN_SUCCESS");
+        return new UserRes(user.getNickname());
     }
 
     @Transactional
@@ -77,7 +75,7 @@ public class UserService {
         // 3. 기본 Setting 값 설정
         settingProvisioningService.provisionDefaultSetting(newUser.getUserId());
 
-        return new UserRes("REGISTER_SUCCESS");
+        return new UserRes(newUser.getNickname());
     }
 
     // TODO: 로그아웃 추가
@@ -85,27 +83,27 @@ public class UserService {
     public UserRes changePassword(ChangePasswordReq changePasswordReq) {
         LoginReq loginReq = new LoginReq(changePasswordReq.loginId(), changePasswordReq.oldPassword());
 
-        User currentUser = authenticateAndGetUser(loginReq);
+        User user = authenticateAndGetUser(loginReq);
 
         // TODO: 비밀번호 제약조건이 필요하다면 이곳에 넣기!!
 
-        currentUser.updatePassword(passwordEncoder.encode(changePasswordReq.newPassword()));
+        user.updatePassword(passwordEncoder.encode(changePasswordReq.newPassword()));
 
-        repository.save(currentUser);
+        repository.save(user);
 
-        return new UserRes("PASSWORD_CHANGED");
+        return new UserRes(user.getNickname());
     }
 
     public UserRes changeNickname(ChangeNicknameReq changeNicknameReq) {
         LoginReq loginReq = new LoginReq(changeNicknameReq.loginId(), changeNicknameReq.password());
 
-        User currentUser = authenticateAndGetUser(loginReq);
+        User user = authenticateAndGetUser(loginReq);
 
-        currentUser.updateNickname(changeNicknameReq.newNickname());
+        user.updateNickname(changeNicknameReq.newNickname());
 
-        repository.save(currentUser);
+        repository.save(user);
 
-        return new UserRes("NICKNAME_CHANGED");
+        return new UserRes(user.getNickname());
     }
 
     @Transactional
@@ -117,6 +115,6 @@ public class UserService {
         // 관련 설정 삭제
         settingProvisioningService.deleteUserSetting(user.getUserId());
 
-        return new UserRes("DELETE_SUCCESS");
+        return new UserRes(user.getNickname());
     }
 }
