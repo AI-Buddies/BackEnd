@@ -2,11 +2,13 @@ package com.example.sketchTalk.model.entity;
 
 import com.example.sketchTalk.dto.diary.in.SaveDiaryReq;
 import com.example.sketchTalk.model.Emotion;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -32,7 +34,7 @@ public class Diary {
     private String content;
 
     @Column(nullable=false)
-    private Date date;
+    private LocalDate date;
 
     @Enumerated(EnumType.STRING)
     private Emotion emotion;
@@ -47,12 +49,14 @@ public class Diary {
         this.content = saveDiaryReq.content();
         this.date = saveDiaryReq.date();
         this.emotion = saveDiaryReq.emotion();
+        this.createdAt = LocalDateTime.now();
     }
 
     public void rewriteDiary(String title, String content, Emotion emotion) {
         this.title = title;
         this.content = content;
         this.emotion = emotion;
+        this.updatedAt = LocalDateTime.now();
     }
 
 
