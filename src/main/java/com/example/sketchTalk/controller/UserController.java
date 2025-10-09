@@ -1,11 +1,13 @@
 package com.example.sketchTalk.controller;
 
+import com.example.sketchTalk._core.common.ApiResponse;
 import com.example.sketchTalk.dto.user.in.ChangeNicknameReq;
 import com.example.sketchTalk.dto.user.in.ChangePasswordReq;
 import com.example.sketchTalk.dto.user.in.LoginReq;
 import com.example.sketchTalk.dto.user.in.RegisterReq;
 import com.example.sketchTalk.dto.user.out.UserRes;
 import com.example.sketchTalk.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,34 +21,59 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserRes> login(@RequestBody LoginReq loginReq) {
+    public ResponseEntity<ApiResponse<UserRes>> login(@RequestBody LoginReq loginReq) {
         UserRes result = service.login(loginReq);
-        return ResponseEntity.ok(result);
+
+        ApiResponse<UserRes> body = ApiResponse.onSuccess(HttpStatus.OK, result);
+
+        return ResponseEntity
+                .status(body.getHttpStatus())
+                .body(body);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserRes> register(@RequestBody RegisterReq registerReq) {
+    public ResponseEntity<ApiResponse<UserRes>> register(@RequestBody RegisterReq registerReq) {
         UserRes result = service.register(registerReq);
-        return ResponseEntity.ok(result);
+
+        ApiResponse<UserRes> body = ApiResponse.onSuccess(HttpStatus.OK, result);
+
+        return ResponseEntity
+                .status(body.getHttpStatus())
+                .body(body);
     }
 
     // TODO: 로그아웃 추가
 
     @PatchMapping("/password")
-    public ResponseEntity<UserRes> changePassword(@RequestBody ChangePasswordReq changePasswordReq) {
+    public ResponseEntity<ApiResponse<UserRes>> changePassword(@RequestBody ChangePasswordReq changePasswordReq) {
         UserRes result = service.changePassword(changePasswordReq);
-        return ResponseEntity.ok(result);
+
+        ApiResponse<UserRes> body = ApiResponse.onSuccess(HttpStatus.OK, result);
+
+        return ResponseEntity
+                .status(body.getHttpStatus())
+                .body(body);
     }
 
     @PatchMapping("/nickname")
-    public ResponseEntity<UserRes> changeNickname(@RequestBody ChangeNicknameReq changeNicknameReq) {
+    public ResponseEntity<ApiResponse<UserRes>> changeNickname(@RequestBody ChangeNicknameReq changeNicknameReq) {
         UserRes result = service.changeNickname(changeNicknameReq);
-        return ResponseEntity.ok(result);
+
+        ApiResponse<UserRes> body = ApiResponse.onSuccess(HttpStatus.OK, result);
+
+        return ResponseEntity
+                .status(body.getHttpStatus())
+                .body(body);
     }
 
     @DeleteMapping
-    public ResponseEntity<UserRes> delete(@RequestBody LoginReq loginReq) {
+    public ResponseEntity<ApiResponse<UserRes>> delete(@RequestBody LoginReq loginReq) {
         UserRes result = service.delete(loginReq);
-        return ResponseEntity.ok(result);
+
+        ApiResponse<UserRes> body = ApiResponse.onSuccess(HttpStatus.OK, result);
+
+        return ResponseEntity
+                .status(body.getHttpStatus())
+                .body(body);
     }
 }
