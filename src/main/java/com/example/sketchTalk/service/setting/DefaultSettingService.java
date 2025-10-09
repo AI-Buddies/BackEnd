@@ -1,10 +1,10 @@
 package com.example.sketchTalk.service.setting;
 
+import com.example.sketchTalk._core.error.CustomException;
 import com.example.sketchTalk.dto.setting.in.GetSettingReq;
 import com.example.sketchTalk.dto.setting.in.SetDefaultSettingReq;
 import com.example.sketchTalk.dto.setting.out.GetProfileRes;
 import com.example.sketchTalk.dto.setting.out.SetDefaultSettingRes;
-import com.example.sketchTalk.exception.user.UserException;
 import com.example.sketchTalk.exception.user.UserExceptions;
 import com.example.sketchTalk.model.entity.User;
 import com.example.sketchTalk.model.entity.setting.DefaultSetting;
@@ -27,10 +27,10 @@ public class DefaultSettingService {
 
     public GetProfileRes getUserInformation(GetSettingReq req) {
         User user = userRepository.findByUserId(req.userId())
-                .orElseThrow( () -> new UserException(UserExceptions.ID_NOT_FOUND));
+                .orElseThrow( () -> new CustomException(UserExceptions.ID_NOT_FOUND));
 
         DefaultSetting defaultSetting = defaultSettingRepository.findByUserId(req.userId())
-                .orElseThrow( () -> new UserException(UserExceptions.ID_NOT_FOUND));
+                .orElseThrow( () -> new CustomException(UserExceptions.ID_NOT_FOUND));
 
         String nickname = user.getNickname();
         LocalDate birthdate = user.getBirthdate();
@@ -42,7 +42,7 @@ public class DefaultSettingService {
     @Transactional
     public SetDefaultSettingRes SetDefaultAlarm(SetDefaultSettingReq req) {
         DefaultSetting defaultSetting = defaultSettingRepository.findByUserId(req.userId())
-                .orElseThrow( () -> new UserException(UserExceptions.ID_NOT_FOUND));
+                .orElseThrow( () -> new CustomException(UserExceptions.ID_NOT_FOUND));
 
         defaultSetting.setCanAlarm(req.canAlarm());
         defaultSettingRepository.save(defaultSetting);

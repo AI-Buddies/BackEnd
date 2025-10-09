@@ -1,11 +1,11 @@
 package com.example.sketchTalk.service;
 
+import com.example.sketchTalk._core.error.CustomException;
 import com.example.sketchTalk.dto.user.in.ChangeNicknameReq;
 import com.example.sketchTalk.dto.user.in.ChangePasswordReq;
 import com.example.sketchTalk.dto.user.in.LoginReq;
 import com.example.sketchTalk.dto.user.in.RegisterReq;
 import com.example.sketchTalk.dto.user.out.UserRes;
-import com.example.sketchTalk.exception.user.UserException;
 import com.example.sketchTalk.exception.user.UserExceptions;
 import com.example.sketchTalk.model.entity.User;
 import com.example.sketchTalk.repository.UserRepository;
@@ -32,10 +32,10 @@ public class UserService {
 
     public User authenticateAndGetUser(LoginReq loginReq) {
         User user = repository.findByLoginId(loginReq.loginId())
-                .orElseThrow( () -> new UserException(UserExceptions.ID_NOT_FOUND));
+                .orElseThrow( () -> new CustomException(UserExceptions.ID_NOT_FOUND));
 
         if (!passwordEncoder.matches(loginReq.password(), user.getPassword())) {
-            throw new UserException(UserExceptions.PASSWORD_MISMATCH);
+            throw new CustomException(UserExceptions.PASSWORD_MISMATCH);
         }
 
         return user;
@@ -53,14 +53,14 @@ public class UserService {
         // 1. 중복 ID 확인
         repository.findByLoginId(registerReq.loginId())
                 .ifPresent(user -> {
-                    throw new UserException(UserExceptions.ID_ALREADY_EXISTS);
+                    throw new CustomException(UserExceptions.ID_ALREADY_EXISTS);
                 });
 
         // TODO: 비밀번호 제약조건이 필요하다면 이곳에 넣기!!
 
         // 2. 생년월일 타당성 확인
         if (registerReq.birthdate().isAfter(LocalDate.now())) {
-            throw new UserException(UserExceptions.BIRTHDATE_INVALID);
+            throw new CustomException(UserExceptions.BIRTHDATE_INVALID);
         }
 
         User newUser = User.builder()
