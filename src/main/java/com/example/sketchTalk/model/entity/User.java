@@ -1,9 +1,9 @@
 package com.example.sketchTalk.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -15,7 +15,7 @@ public class User {
     @Column(name="user_id")
     private Long userId;
 
-    @Column(nullable = false)
+    @Column(name="login_id", nullable = false)
     private String loginId;
 
     @Column(nullable = false)
@@ -25,7 +25,21 @@ public class User {
     private String nickname;
 
     @Column(nullable = false)
-    private String birthDate;
+    private LocalDate birthdate;
 
+    @Builder
+    public User(String loginId, String password, String nickname, LocalDate birthdate) {
+        this.loginId = loginId;
+        this.password = password;
+        this.nickname = nickname;
+        this.birthdate = birthdate;
+    }
 
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }
