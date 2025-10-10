@@ -22,13 +22,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DiaryService {
     private final DiaryRepository diaryRepository;
-    private final CommentService commentService;
+//    private final CommentService commentService;
 
     public SaveDiaryRes putDiary(SaveDiaryReq saveDiaryReq) {
         Diary diary = new Diary(saveDiaryReq);
         Diary savedDiary = diaryRepository.save(diary);
 
-        ReqContentRes writtenComment = commentService.reqComment(diary.getContent());
+//        ReqContentRes writtenComment = commentService.reqComment(diary.getContent());
 //        SaveCommentReq saveCommentReq = new SaveCommentReq(savedDiary.getDiaryId(), writtenComment.content());
 //        SaveCommentRes saveCommentRes = commentService.putComment(saveCommentReq);
 
@@ -54,20 +54,20 @@ public class DiaryService {
 
     /*
     단어 목록을 가져와서 HastSet을 만들고
-    문자열 내 검색, 존재하는 단어 탐색하여 배열로 반환
+    문자열 내 검색, 존재하는 단어 탐색하여 객체 배열로 반환
     UserSub에 추가를 하고
     전체 카테고리를 달성헀는지 확인
      */
-    private void checkAchievement(String s) {
+    private void checkAchievement(String diaryContent) {
         //여기서 각 함수를 호출해서 실행
     }
 
-    private List<String> getCategoryNames() {
+    private List<String> getCategoryNames() {//객체 배열로 반환
         //단어 목록 가져오기
         return null;
     }
 
-    private List<Long> findSubs() {
+    private List<Long> findSubs(String diary, List<String> subs) {
         //문자열 내 검색
         return null;
     }
