@@ -3,6 +3,7 @@ package com.example.sketchTalk.service.setting;
 import com.example.sketchTalk._core.error.CustomException;
 import com.example.sketchTalk.dto.setting.in.GetSettingReq;
 import com.example.sketchTalk.dto.setting.in.SetDefaultSettingReq;
+import com.example.sketchTalk.dto.setting.out.GetAppInfoRes;
 import com.example.sketchTalk.dto.setting.out.GetFAQListRes;
 import com.example.sketchTalk.dto.setting.out.GetProfileRes;
 import com.example.sketchTalk.dto.setting.out.SetDefaultSettingRes;
@@ -16,6 +17,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,5 +84,13 @@ public class DefaultSettingService {
         list.add(faq3);
 
         return new GetFAQListRes(list);
+    }
+
+    public GetAppInfoRes getAppInformation() {
+        return new GetAppInfoRes(
+                "Android",
+                "1.0.0",
+                LocalDate.of(2025, Month.DECEMBER, 19)
+        );
     }
 }

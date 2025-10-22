@@ -3,6 +3,7 @@ package com.example.sketchTalk.controller.setting;
 import com.example.sketchTalk._core.common.ApiResponse;
 import com.example.sketchTalk.dto.setting.in.GetSettingReq;
 import com.example.sketchTalk.dto.setting.in.SetDefaultSettingReq;
+import com.example.sketchTalk.dto.setting.out.GetAppInfoRes;
 import com.example.sketchTalk.dto.setting.out.GetFAQListRes;
 import com.example.sketchTalk.dto.setting.out.GetProfileRes;
 import com.example.sketchTalk.dto.setting.out.SetDefaultSettingRes;
@@ -38,6 +39,13 @@ public class DefaultSettingController {
     @GetMapping("/setting/question")
     public ApiResponse<GetFAQListRes> getFAQList() {
         GetFAQListRes result = defaultSettingService.getFAQList();
+
+        return ApiResponse.onSuccess(HttpStatus.OK, result);
+    }
+
+    @GetMapping("/setting/appinfo")
+    public ApiResponse<GetAppInfoRes> getAppInformation() {
+        GetAppInfoRes result = defaultSettingService.getAppInformation();
 
         return ApiResponse.onSuccess(HttpStatus.OK, result);
     }
