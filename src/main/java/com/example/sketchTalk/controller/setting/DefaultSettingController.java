@@ -3,6 +3,7 @@ package com.example.sketchTalk.controller.setting;
 import com.example.sketchTalk._core.common.ApiResponse;
 import com.example.sketchTalk.dto.setting.in.GetSettingReq;
 import com.example.sketchTalk.dto.setting.in.SetDefaultSettingReq;
+import com.example.sketchTalk.dto.setting.out.GetFAQListRes;
 import com.example.sketchTalk.dto.setting.out.GetProfileRes;
 import com.example.sketchTalk.dto.setting.out.SetDefaultSettingRes;
 import com.example.sketchTalk.service.setting.DefaultSettingService;
@@ -30,6 +31,13 @@ public class DefaultSettingController {
     @PatchMapping("/setting")
     public ApiResponse<SetDefaultSettingRes> SetDefaultAlarm(@RequestBody SetDefaultSettingReq req) {
         SetDefaultSettingRes result = defaultSettingService.SetDefaultAlarm(req);
+
+        return ApiResponse.onSuccess(HttpStatus.OK, result);
+    }
+
+    @GetMapping("/setting/question")
+    public ApiResponse<GetFAQListRes> getFAQList() {
+        GetFAQListRes result = defaultSettingService.getFAQList();
 
         return ApiResponse.onSuccess(HttpStatus.OK, result);
     }
