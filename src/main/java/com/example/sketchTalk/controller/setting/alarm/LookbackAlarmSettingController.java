@@ -1,13 +1,12 @@
 package com.example.sketchTalk.controller.setting.alarm;
 
 import com.example.sketchTalk._core.common.ApiResponse;
-import com.example.sketchTalk._core.common.ApiResponseUtils;
 import com.example.sketchTalk.dto.setting.in.GetSettingReq;
 import com.example.sketchTalk.dto.setting.in.SetLookbackAlarmSettingReq;
 import com.example.sketchTalk.dto.setting.out.GetLookbackAlarmSettingRes;
 import com.example.sketchTalk.dto.setting.out.SetLookbackAlarmSettingRes;
 import com.example.sketchTalk.service.setting.alarm.LookbackAlarmSettingService;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,16 +21,16 @@ public class LookbackAlarmSettingController {
     }
 
     @GetMapping("/setting/notify/lookback")
-    public ResponseEntity<ApiResponse<GetLookbackAlarmSettingRes>> getLookbackAlarmSetting(@RequestBody GetSettingReq req) {
+    public ApiResponse<GetLookbackAlarmSettingRes> getLookbackAlarmSetting(@RequestBody GetSettingReq req) {
         GetLookbackAlarmSettingRes result = lookbackAlarmSettingService.getLookbackAlarmSetting(req);
 
-        return ApiResponseUtils.ok(result);
+        return ApiResponse.onSuccess(HttpStatus.OK, result);
     }
 
     @PatchMapping("/setting/notify/lookback")
-    public ResponseEntity<ApiResponse<SetLookbackAlarmSettingRes>> setLookbackAlarmSetting(@RequestBody SetLookbackAlarmSettingReq req) {
+    public ApiResponse<SetLookbackAlarmSettingRes> setLookbackAlarmSetting(@RequestBody SetLookbackAlarmSettingReq req) {
         SetLookbackAlarmSettingRes result = lookbackAlarmSettingService.setLookbackAlarmSetting(req);
 
-        return ApiResponseUtils.ok(result);
+        return ApiResponse.onSuccess(HttpStatus.OK, result);
     }
 }
