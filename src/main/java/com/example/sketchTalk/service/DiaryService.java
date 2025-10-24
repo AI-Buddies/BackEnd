@@ -1,6 +1,8 @@
 package com.example.sketchTalk.service;
 
 import com.example.sketchTalk._core.error.CustomException;
+import com.example.sketchTalk.dto.category.out.AchievedResultRes;
+import com.example.sketchTalk.dto.category.out.CategoryCompletionRes;
 import com.example.sketchTalk.dto.comment.in.SaveCommentReq;
 import com.example.sketchTalk.dto.comment.out.ReqContentRes;
 import com.example.sketchTalk.dto.comment.out.SaveCommentRes;
@@ -8,20 +10,25 @@ import com.example.sketchTalk.dto.diary.in.ModifyDiaryReq;
 import com.example.sketchTalk.dto.diary.in.SaveDiaryReq;
 import com.example.sketchTalk.dto.diary.out.ModifyDiaryRes;
 import com.example.sketchTalk.dto.diary.out.SaveDiaryRes;
+import com.example.sketchTalk.dto.subcategory.out.SubCategoryNamesDTO;
 import com.example.sketchTalk.exception.diary.DiaryExceptions;
 import com.example.sketchTalk.model.entity.Diary;
 import com.example.sketchTalk.repository.DiaryRepository;
+import com.example.sketchTalk.repository.achievement.SubCategoryRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
 @RequiredArgsConstructor
 public class DiaryService {
     private final DiaryRepository diaryRepository;
+    private final SubCategoryService subCategoryService;
+    private final CategoryService categoryService;
 //    private final CommentService commentService;
 
     public SaveDiaryRes putDiary(SaveDiaryReq saveDiaryReq) {
@@ -58,25 +65,22 @@ public class DiaryService {
     UserSub에 추가를 하고
     전체 카테고리를 달성헀는지 확인
      */
-    private void checkAchievement(String diaryContent) {
-        //여기서 각 함수를 호출해서 실행
+    private AchievedResultRes checkAchievement(long userId, String diaryContent) {
+        List<SubCategoryNamesDTO> subCategories = subCategoryService.findAllSubCategories();//모든 서브카테고리 조회
+        List<SubCategoryNamesDTO> achievedSubs = findSubs(diaryContent, subCategories);//일기 내 검색
+        List<CategoryCompletionRes> achievedCategories = List.of();
+        if(!achievedSubs.isEmpty()) {//달성한 도전과제가 있을 경우
+            List<Long> categoryIds = subCategoryService.updateSubCategory(achievedSubs);//각각의 USER_SUB를 저장 및 확인할 카테고리 Id 저장
+            achievedCategories = categoryService.updateCategory(userId, categoryIds);//카테고리 전체의 달성 여부를 확인 및 처리
+        }
+        return new AchievedResultRes(achievedSubs, achievedCategories);
     }
 
-    private List<String> getCategoryNames() {//객체 배열로 반환
-        //단어 목록 가져오기
-        return null;
-    }
-
-    private List<Long> findSubs(String diary, List<String> subs) {
+    private List<SubCategoryNamesDTO> findSubs(String diaryContent, List<SubCategoryNamesDTO> subs) {
         //문자열 내 검색
-        return null;
-    }
-
-    private void updateCategory(List<Long> subs) {
-
-    }
-
-    private void updateAchievement() {
-
+        return subs.stream()
+                .filter(sub->diaryContent.contains(sub.name()))
+                .map(sub -> new SubCategoryNamesDTO(sub.subId(), sub.category(), sub.name()))
+                .collect(Collectors.toList());
     }
 }
