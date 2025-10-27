@@ -1,5 +1,6 @@
 package com.example.sketchTalk.service;
 
+import com.example.sketchTalk._core.error.CustomException;
 import com.example.sketchTalk.dto.user.in.ChangeNicknameReq;
 import com.example.sketchTalk.dto.user.in.ChangePasswordReq;
 import com.example.sketchTalk.dto.user.in.LoginReq;
@@ -7,7 +8,6 @@ import com.example.sketchTalk.dto.user.in.RegisterReq;
 import com.example.sketchTalk.dto.user.out.LoginRes;
 import com.example.sketchTalk.dto.user.out.RegisterRes;
 import com.example.sketchTalk.dto.user.out.UserRes;
-import com.example.sketchTalk.exception.user.UserException;
 import com.example.sketchTalk.exception.user.UserExceptions;
 import com.example.sketchTalk.model.entity.RefreshToken;
 import com.example.sketchTalk.model.entity.User;
@@ -46,11 +46,11 @@ public class UserService {
     }
 
     public User authenticateAndGetUser(LoginReq loginReq) {
-        User user = repository.findByLoginId(loginReq.getLoginId())
-                .orElseThrow( () -> new UserException(UserExceptions.ID_NOT_FOUND));
+        User user = repository.findByLoginId(loginReq.loginId())
+                .orElseThrow( () -> new CustomException(UserExceptions.ID_NOT_FOUND));
 
-        if (!passwordEncoder.matches(loginReq.getPassword(), user.getPassword())) {
-            throw new UserException(UserExceptions.PASSWORD_MISMATCH);
+        if (!passwordEncoder.matches(loginReq.password(), user.getPassword())) {
+            throw new CustomException(UserExceptions.PASSWORD_MISMATCH);
         }
 
         return user;
@@ -63,30 +63,30 @@ public class UserService {
         String accessToken = jwtUtils.generateJwtToken(user.getUserId());
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getUserId());
 
-        return new LoginRes(accessToken, refreshToken.getToken());
+        return new LoginRes(user.getNickname(), accessToken, refreshToken.getToken());
     }
 
     @Transactional
     public RegisterRes register(RegisterReq registerReq) {
 
         // 1. 중복 ID 확인
-        repository.findByLoginId(registerReq.getLoginId())
+        repository.findByLoginId(registerReq.loginId())
                 .ifPresent(user -> {
-                    throw new UserException(UserExceptions.ID_ALREADY_EXISTS);
+                    throw new CustomException(UserExceptions.ID_ALREADY_EXISTS);
                 });
 
         // TODO: 비밀번호 제약조건이 필요하다면 이곳에 넣기!!
 
         // 2. 생년월일 타당성 확인
-        if (registerReq.getBirthdate().isAfter(LocalDate.now())) {
-            throw new UserException(UserExceptions.BIRTHDATE_INVALID);
+        if (registerReq.birthdate().isAfter(LocalDate.now())) {
+            throw new CustomException(UserExceptions.BIRTHDATE_INVALID);
         }
 
         User newUser = User.builder()
-                .loginId(registerReq.getLoginId())
-                .password(passwordEncoder.encode(registerReq.getPassword()))
-                .nickname(registerReq.getNickname())
-                .birthdate(registerReq.getBirthdate())
+                .loginId(registerReq.loginId())
+                .password(passwordEncoder.encode(registerReq.password()))
+                .nickname(registerReq.nickname())
+                .birthdate(registerReq.birthdate())
                 .build();
 
         repository.save(newUser);
@@ -98,35 +98,35 @@ public class UserService {
         String accessToken = jwtUtils.generateJwtToken(newUser.getUserId());
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(newUser.getUserId());
 
-        return new RegisterRes(accessToken, refreshToken.getToken());
+        return new RegisterRes(newUser.getNickname(), accessToken, refreshToken.getToken());
     }
 
     // TODO: 로그아웃 추가
 
     public UserRes changePassword(ChangePasswordReq changePasswordReq) {
-        LoginReq loginReq = new LoginReq(changePasswordReq.getLoginId(), changePasswordReq.getOldPassword());
+        LoginReq loginReq = new LoginReq(changePasswordReq.loginId(), changePasswordReq.oldPassword());
 
-        User currentUser = authenticateAndGetUser(loginReq);
+        User user = authenticateAndGetUser(loginReq);
 
         // TODO: 비밀번호 제약조건이 필요하다면 이곳에 넣기!!
 
-        currentUser.updatePassword(passwordEncoder.encode(changePasswordReq.getNewPassword()));
+        user.updatePassword(passwordEncoder.encode(changePasswordReq.newPassword()));
 
-        repository.save(currentUser);
+        repository.save(user);
 
-        return new UserRes("PASSWORD_CHANGED");
+        return new UserRes(user.getNickname());
     }
 
     public UserRes changeNickname(ChangeNicknameReq changeNicknameReq) {
-        LoginReq loginReq = new LoginReq(changeNicknameReq.getLoginId(), changeNicknameReq.getPassword());
+        LoginReq loginReq = new LoginReq(changeNicknameReq.loginId(), changeNicknameReq.password());
 
-        User currentUser = authenticateAndGetUser(loginReq);
+        User user = authenticateAndGetUser(loginReq);
 
-        currentUser.updateNickname(changeNicknameReq.getNewNickname());
+        user.updateNickname(changeNicknameReq.newNickname());
 
-        repository.save(currentUser);
+        repository.save(user);
 
-        return new UserRes("NICKNAME_CHANGED");
+        return new UserRes(user.getNickname());
     }
 
     @Transactional
@@ -138,6 +138,6 @@ public class UserService {
         // 관련 설정 삭제
         settingProvisioningService.deleteUserSetting(user.getUserId());
 
-        return new UserRes("DELETE_SUCCESS");
+        return new UserRes(user.getNickname());
     }
 }

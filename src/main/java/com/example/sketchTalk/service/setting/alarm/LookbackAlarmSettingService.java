@@ -1,10 +1,10 @@
 package com.example.sketchTalk.service.setting.alarm;
 
+import com.example.sketchTalk._core.error.CustomException;
 import com.example.sketchTalk.dto.setting.in.GetSettingReq;
 import com.example.sketchTalk.dto.setting.in.SetLookbackAlarmSettingReq;
 import com.example.sketchTalk.dto.setting.out.GetLookbackAlarmSettingRes;
 import com.example.sketchTalk.dto.setting.out.SetLookbackAlarmSettingRes;
-import com.example.sketchTalk.exception.user.UserException;
 import com.example.sketchTalk.exception.user.UserExceptions;
 import com.example.sketchTalk.model.entity.setting.alarm.LookbackAlarmSetting;
 import com.example.sketchTalk.model.entity.setting.enums.AlarmUnit;
@@ -24,7 +24,7 @@ public class LookbackAlarmSettingService {
 
     public GetLookbackAlarmSettingRes getLookbackAlarmSetting(GetSettingReq req) {
         LookbackAlarmSetting  lookbackAlarmSetting = lookbackAlarmSettingRepository.findByUserId(req.userId())
-                .orElseThrow( () -> new UserException(UserExceptions.ID_NOT_FOUND));
+                .orElseThrow( () -> new CustomException(UserExceptions.ID_NOT_FOUND));
 
         boolean canAlarm = lookbackAlarmSetting.isCanAlarm();
         LocalTime alarmTime = lookbackAlarmSetting.getAlarmTime();
@@ -36,7 +36,7 @@ public class LookbackAlarmSettingService {
     @Transactional
     public SetLookbackAlarmSettingRes setLookbackAlarmSetting(SetLookbackAlarmSettingReq req) {
         LookbackAlarmSetting lookbackAlarmSetting = lookbackAlarmSettingRepository.findByUserId(req.userId())
-                .orElseThrow( () -> new UserException(UserExceptions.ID_NOT_FOUND));
+                .orElseThrow( () -> new CustomException(UserExceptions.ID_NOT_FOUND));
 
         lookbackAlarmSetting.updateSetting(req.canAlarm(), req.alarmTime(), req.alarmUnit());
         lookbackAlarmSettingRepository.save(lookbackAlarmSetting);
