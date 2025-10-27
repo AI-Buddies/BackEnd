@@ -4,12 +4,16 @@ import com.example.sketchTalk.dto.user.in.ChangeNicknameReq;
 import com.example.sketchTalk.dto.user.in.ChangePasswordReq;
 import com.example.sketchTalk.dto.user.in.LoginReq;
 import com.example.sketchTalk.dto.user.in.RegisterReq;
+import com.example.sketchTalk.dto.user.out.LoginRes;
+import com.example.sketchTalk.dto.user.out.RegisterRes;
 import com.example.sketchTalk.dto.user.out.UserRes;
 import com.example.sketchTalk.exception.user.UserException;
 import com.example.sketchTalk.exception.user.UserExceptions;
+import com.example.sketchTalk.model.entity.RefreshToken;
 import com.example.sketchTalk.model.entity.User;
 import com.example.sketchTalk.repository.UserRepository;
 
+import com.example.sketchTalk.security.jwt.JwtUtils;
 import com.example.sketchTalk.service.setting.SettingProvisioningService;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,11 +27,22 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     private final SettingProvisioningService settingProvisioningService;
+    private final RefreshTokenService refreshTokenService;
 
-    public UserService(UserRepository repository, PasswordEncoder passwordEncoder, SettingProvisioningService settingProvisioningService) {
+    private final JwtUtils jwtUtils;
+
+    public UserService(
+            UserRepository repository,
+            PasswordEncoder passwordEncoder,
+            SettingProvisioningService settingProvisioningService,
+            RefreshTokenService refreshTokenService,
+            JwtUtils jwtUtils) {
+
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
         this.settingProvisioningService = settingProvisioningService;
+        this.refreshTokenService = refreshTokenService;
+        this.jwtUtils = jwtUtils;
     }
 
     public User authenticateAndGetUser(LoginReq loginReq) {
@@ -41,16 +56,18 @@ public class UserService {
         return user;
     }
 
-    public UserRes login(LoginReq loginReq) {
+    @Transactional
+    public LoginRes login(LoginReq loginReq) {
+        User user = authenticateAndGetUser(loginReq);
 
-        // 반환받지 않고 authenticate
-        authenticateAndGetUser(loginReq);
+        String accessToken = jwtUtils.generateJwtToken(user.getUserId());
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getUserId());
 
-        return new UserRes("LOGIN_SUCCESS");
+        return new LoginRes(accessToken, refreshToken.getToken());
     }
 
     @Transactional
-    public UserRes register(RegisterReq registerReq) {
+    public RegisterRes register(RegisterReq registerReq) {
 
         // 1. 중복 ID 확인
         repository.findByLoginId(registerReq.getLoginId())
@@ -77,7 +94,11 @@ public class UserService {
         // 3. 기본 Setting 값 설정
         settingProvisioningService.provisionDefaultSetting(newUser.getUserId());
 
-        return new UserRes("REGISTER_SUCCESS");
+        // 4. 토큰 발급
+        String accessToken = jwtUtils.generateJwtToken(newUser.getUserId());
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(newUser.getUserId());
+
+        return new RegisterRes(accessToken, refreshToken.getToken());
     }
 
     // TODO: 로그아웃 추가
