@@ -1,15 +1,13 @@
 package com.example.sketchTalk.controller;
 
 import com.example.sketchTalk._core.common.ApiResponse;
-import com.example.sketchTalk.dto.user.in.ChangeNicknameReq;
-import com.example.sketchTalk.dto.user.in.ChangePasswordReq;
-import com.example.sketchTalk.dto.user.in.LoginReq;
-import com.example.sketchTalk.dto.user.in.RegisterReq;
+import com.example.sketchTalk.dto.user.in.*;
 import com.example.sketchTalk.dto.user.out.LoginRes;
 import com.example.sketchTalk.dto.user.out.RegisterRes;
 import com.example.sketchTalk.dto.user.out.UserRes;
 import com.example.sketchTalk.service.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -35,7 +33,12 @@ public class UserController {
         return ApiResponse.onSuccess(HttpStatus.CREATED, result);
     }
 
-    // TODO: 로그아웃 추가
+    @PostMapping("/logout")
+    public ApiResponse<UserRes> logout(@AuthenticationPrincipal Long userId) {
+        UserRes result = service.logout(userId);
+
+        return ApiResponse.onSuccess(HttpStatus.OK, result);
+    }
 
     @PatchMapping("/password")
     public ApiResponse<UserRes> changePassword(@RequestBody ChangePasswordReq changePasswordReq) {

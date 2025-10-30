@@ -1,10 +1,7 @@
 package com.example.sketchTalk.service;
 
 import com.example.sketchTalk._core.error.CustomException;
-import com.example.sketchTalk.dto.user.in.ChangeNicknameReq;
-import com.example.sketchTalk.dto.user.in.ChangePasswordReq;
-import com.example.sketchTalk.dto.user.in.LoginReq;
-import com.example.sketchTalk.dto.user.in.RegisterReq;
+import com.example.sketchTalk.dto.user.in.*;
 import com.example.sketchTalk.dto.user.out.LoginRes;
 import com.example.sketchTalk.dto.user.out.RegisterRes;
 import com.example.sketchTalk.dto.user.out.UserRes;
@@ -101,7 +98,14 @@ public class UserService {
         return new RegisterRes(newUser.getNickname(), accessToken, refreshToken.getToken());
     }
 
-    // TODO: 로그아웃 추가
+    public UserRes logout(Long userId) {
+        User user = repository.findByUserId(userId)
+                .orElseThrow( () -> new CustomException(UserExceptions.ID_NOT_FOUND));
+
+        refreshTokenService.deleteByUserId(userId);
+
+        return new UserRes(user.getNickname());
+    }
 
     public UserRes changePassword(ChangePasswordReq changePasswordReq) {
         LoginReq loginReq = new LoginReq(changePasswordReq.loginId(), changePasswordReq.oldPassword());
