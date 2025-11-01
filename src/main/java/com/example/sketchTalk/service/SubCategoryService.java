@@ -46,8 +46,4 @@ public class SubCategoryService {
                 .map(SubCategory::getSub_id)
                 .collect(Collectors.toList());
     }
-
-    public Long findwithSubIdAndUserId(Long subId, Long userId) {
-
-    }
 }

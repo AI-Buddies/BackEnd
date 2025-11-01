@@ -24,3 +24,6 @@ spring:
       enabled: true
       maxFileSize: 200MB
       maxRequestSize: 300MB
+
+fastapi:
+  endpoint: http://43.201.10.241
