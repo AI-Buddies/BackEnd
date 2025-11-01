@@ -7,10 +7,7 @@ import com.example.sketchTalk.dto.setting.out.SetAudioSettingRes;
 import com.example.sketchTalk.service.setting.AudioSettingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class AudioSettingController {
@@ -27,7 +24,7 @@ public class AudioSettingController {
         return ApiResponse.onSuccess(HttpStatus.OK, result);
     }
 
-    @PatchMapping("/setting/tts")
+    @PutMapping("/setting/tts")
     public ApiResponse<SetAudioSettingRes> setAudioSetting(
             @AuthenticationPrincipal Long userId,
             @RequestBody SetAudioSettingReq req

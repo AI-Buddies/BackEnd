@@ -24,7 +24,7 @@ public class PastNotificationSettingController {
         return ApiResponse.onSuccess(HttpStatus.OK, result);
     }
 
-    @PatchMapping("/setting/notification/past")
+    @PutMapping("/setting/notification/past")
     public ApiResponse<SetPastNotificationSettingRes> setPastNotificationAlarmSetting(
             @AuthenticationPrincipal Long userId,
             @RequestBody SetPastNotificationSettingReq req

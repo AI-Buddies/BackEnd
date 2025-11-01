@@ -24,7 +24,7 @@ public class WritingNotificationSettingController {
         return ApiResponse.onSuccess(HttpStatus.OK, result);
     }
 
-    @PatchMapping("/setting/notification/post")
+    @PutMapping("/setting/notification/post")
     public ApiResponse<SetWritingNotificationSettingRes> setWritingNotificationSetting(
             @AuthenticationPrincipal Long userId,
             @RequestBody SetWritingNotificationSettingReq req
