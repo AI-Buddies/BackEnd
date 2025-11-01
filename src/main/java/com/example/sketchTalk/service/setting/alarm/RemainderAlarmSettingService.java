@@ -1,7 +1,6 @@
 package com.example.sketchTalk.service.setting.alarm;
 
 import com.example.sketchTalk._core.error.CustomException;
-import com.example.sketchTalk.dto.setting.in.GetSettingReq;
 import com.example.sketchTalk.dto.setting.in.SetRemainderAlarmSettingReq;
 import com.example.sketchTalk.dto.setting.out.GetRemainderAlarmSettingRes;
 import com.example.sketchTalk.dto.setting.out.SetRemainderAlarmSettingRes;
@@ -24,8 +23,8 @@ public class RemainderAlarmSettingService {
     }
 
     @Transactional
-    public GetRemainderAlarmSettingRes getRemainderAlarmSetting(GetSettingReq req) {
-        RemainderAlarmSetting remainderAlarmSetting = remainderAlarmSettingRepository.findByUserId(req.userId())
+    public GetRemainderAlarmSettingRes getRemainderAlarmSetting(Long userId) {
+        RemainderAlarmSetting remainderAlarmSetting = remainderAlarmSettingRepository.findByUserId(userId)
                 .orElseThrow( () -> new CustomException(UserExceptions.ID_NOT_FOUND));
 
         boolean canAlarm = remainderAlarmSetting.isCanAlarm();
@@ -36,8 +35,8 @@ public class RemainderAlarmSettingService {
         return new GetRemainderAlarmSettingRes(canAlarm, alarmTime, alarmValue, alarmUnit);
     }
 
-    public SetRemainderAlarmSettingRes setRemainderAlarmSetting(SetRemainderAlarmSettingReq req) {
-        RemainderAlarmSetting remainderAlarmSetting = remainderAlarmSettingRepository.findByUserId(req.userId())
+    public SetRemainderAlarmSettingRes setRemainderAlarmSetting(Long userId, SetRemainderAlarmSettingReq req) {
+        RemainderAlarmSetting remainderAlarmSetting = remainderAlarmSettingRepository.findByUserId(userId)
                 .orElseThrow( () -> new CustomException(UserExceptions.ID_NOT_FOUND));
 
         // TODO: 팀원들과 값 범위 상의하기
@@ -50,7 +49,6 @@ public class RemainderAlarmSettingService {
         remainderAlarmSettingRepository.save(remainderAlarmSetting);
 
         SetRemainderAlarmSettingRes setRemainderAlarmSettingRes = SetRemainderAlarmSettingRes.builder()
-                .userId(req.userId())
                 .canAlarm(req.canAlarm())
                 .alarmTime(req.alarmTime())
                 .alarmValue(req.alarmValue())

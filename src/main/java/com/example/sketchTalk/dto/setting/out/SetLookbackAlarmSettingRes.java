@@ -7,7 +7,6 @@ import java.time.LocalTime;
 
 @Builder
 public record SetLookbackAlarmSettingRes(
-        Long userId,
         boolean canAlarm,
         LocalTime alarmTime,
         AlarmUnit alarmUnit

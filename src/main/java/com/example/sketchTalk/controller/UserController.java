@@ -49,8 +49,8 @@ public class UserController {
     }
 
     @DeleteMapping
-    public ApiResponse<UserRes> delete(@RequestBody LoginReq loginReq) {
-        UserRes result = service.delete(loginReq);
+    public ApiResponse<UserRes> delete(@AuthenticationPrincipal Long userId) {
+        UserRes result = service.delete(userId);
 
         return ApiResponse.onSuccess(HttpStatus.OK, result);
     }

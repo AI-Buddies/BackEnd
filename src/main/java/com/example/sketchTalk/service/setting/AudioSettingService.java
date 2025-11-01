@@ -1,7 +1,6 @@
 package com.example.sketchTalk.service.setting;
 
 import com.example.sketchTalk._core.error.CustomException;
-import com.example.sketchTalk.dto.setting.in.GetSettingReq;
 import com.example.sketchTalk.dto.setting.in.SetAudioSettingReq;
 import com.example.sketchTalk.dto.setting.out.GetAudioSettingRes;
 import com.example.sketchTalk.dto.setting.out.SetAudioSettingRes;
@@ -22,8 +21,8 @@ public class AudioSettingService {
         this.audioSettingRepository = audioSettingRepository;
     }
 
-    public GetAudioSettingRes getAudioSetting(GetSettingReq req) {
-        AudioSetting audioSetting = audioSettingRepository.findByUserId(req.userId())
+    public GetAudioSettingRes getAudioSetting(Long userId) {
+        AudioSetting audioSetting = audioSettingRepository.findByUserId(userId)
                 .orElseThrow( () -> new CustomException(UserExceptions.ID_NOT_FOUND));
 
         VoiceType voiceType = audioSetting.getVoiceType();
@@ -34,8 +33,8 @@ public class AudioSettingService {
     }
 
     @Transactional
-    public SetAudioSettingRes setAudioSetting(SetAudioSettingReq req) {
-        AudioSetting audioSetting = audioSettingRepository.findByUserId(req.userId())
+    public SetAudioSettingRes setAudioSetting(Long userId, SetAudioSettingReq req) {
+        AudioSetting audioSetting = audioSettingRepository.findByUserId(userId)
                         .orElseThrow( () -> new CustomException(UserExceptions.ID_NOT_FOUND));
 
         // 설정값 유효성 체크
@@ -47,7 +46,6 @@ public class AudioSettingService {
         audioSettingRepository.save(audioSetting);
 
         SetAudioSettingRes setAudioSettingRes = SetAudioSettingRes.builder()
-                .userId(req.userId())
                 .voiceType(req.voiceType())
                 .voiceSpeed(req.voiceSpeed())
                 .bgm(req.bgm())

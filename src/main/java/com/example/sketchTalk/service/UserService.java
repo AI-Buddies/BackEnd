@@ -116,8 +116,9 @@ public class UserService {
     }
 
     @Transactional
-    public UserRes delete(LoginReq loginReq) {
-        User user = authenticateAndGetUser(loginReq);
+    public UserRes delete(Long userId) {
+        User user = repository.findByUserId(userId)
+                .orElseThrow( () -> new CustomException(UserExceptions.ID_NOT_FOUND));
 
         repository.delete(user);
 

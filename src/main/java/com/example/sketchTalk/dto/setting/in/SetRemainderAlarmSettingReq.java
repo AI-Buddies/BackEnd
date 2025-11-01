@@ -5,7 +5,6 @@ import com.example.sketchTalk.model.entity.setting.enums.AlarmUnit;
 import java.time.LocalTime;
 
 public record SetRemainderAlarmSettingReq(
-        Long userId,
         boolean canAlarm,
         LocalTime alarmTime,
         int alarmValue,

@@ -7,7 +7,6 @@ import java.time.LocalTime;
 
 @Builder
 public record SetRemainderAlarmSettingRes(
-        Long userId,
         boolean canAlarm,
         LocalTime alarmTime,
         int alarmValue,

@@ -1,7 +1,6 @@
 package com.example.sketchTalk.service.setting.alarm;
 
 import com.example.sketchTalk._core.error.CustomException;
-import com.example.sketchTalk.dto.setting.in.GetSettingReq;
 import com.example.sketchTalk.dto.setting.in.SetLookbackAlarmSettingReq;
 import com.example.sketchTalk.dto.setting.out.GetLookbackAlarmSettingRes;
 import com.example.sketchTalk.dto.setting.out.SetLookbackAlarmSettingRes;
@@ -22,8 +21,8 @@ public class LookbackAlarmSettingService {
         this.lookbackAlarmSettingRepository = lookbackAlarmSettingRepository;
     }
 
-    public GetLookbackAlarmSettingRes getLookbackAlarmSetting(GetSettingReq req) {
-        LookbackAlarmSetting  lookbackAlarmSetting = lookbackAlarmSettingRepository.findByUserId(req.userId())
+    public GetLookbackAlarmSettingRes getLookbackAlarmSetting(Long userId) {
+        LookbackAlarmSetting  lookbackAlarmSetting = lookbackAlarmSettingRepository.findByUserId(userId)
                 .orElseThrow( () -> new CustomException(UserExceptions.ID_NOT_FOUND));
 
         boolean canAlarm = lookbackAlarmSetting.isCanAlarm();
@@ -34,15 +33,14 @@ public class LookbackAlarmSettingService {
     }
 
     @Transactional
-    public SetLookbackAlarmSettingRes setLookbackAlarmSetting(SetLookbackAlarmSettingReq req) {
-        LookbackAlarmSetting lookbackAlarmSetting = lookbackAlarmSettingRepository.findByUserId(req.userId())
+    public SetLookbackAlarmSettingRes setLookbackAlarmSetting(Long userId,SetLookbackAlarmSettingReq req) {
+        LookbackAlarmSetting lookbackAlarmSetting = lookbackAlarmSettingRepository.findByUserId(userId)
                 .orElseThrow( () -> new CustomException(UserExceptions.ID_NOT_FOUND));
 
         lookbackAlarmSetting.updateSetting(req.canAlarm(), req.alarmTime(), req.alarmUnit());
         lookbackAlarmSettingRepository.save(lookbackAlarmSetting);
 
         SetLookbackAlarmSettingRes setLookbackAlarmSettingRes = SetLookbackAlarmSettingRes.builder()
-                .userId(req.userId())
                 .canAlarm(req.canAlarm())
                 .alarmTime(req.alarmTime())
                 .alarmUnit(req.alarmUnit())
