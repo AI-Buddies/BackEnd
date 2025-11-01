@@ -6,9 +6,9 @@ import lombok.Builder;
 import java.time.LocalTime;
 
 @Builder
-public record SetLookbackAlarmSettingRes(
-        boolean canAlarm,
-        LocalTime alarmTime,
-        AlarmUnit alarmUnit
+public record SetWritingNotificationSettingRes(
+        boolean canNotify,
+        LocalTime notificationTime,
+        AlarmUnit notificationUnit
 ) {
 }
