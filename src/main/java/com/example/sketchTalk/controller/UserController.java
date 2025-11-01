@@ -2,6 +2,7 @@ package com.example.sketchTalk.controller;
 
 import com.example.sketchTalk._core.common.ApiResponse;
 import com.example.sketchTalk.dto.user.in.*;
+import com.example.sketchTalk.dto.user.out.UpdateUserInfoRes;
 import com.example.sketchTalk.dto.user.out.LoginRes;
 import com.example.sketchTalk.dto.user.out.RegisterRes;
 import com.example.sketchTalk.dto.user.out.UserRes;
@@ -40,16 +41,9 @@ public class UserController {
         return ApiResponse.onSuccess(HttpStatus.OK, result);
     }
 
-    @PatchMapping("/password")
-    public ApiResponse<UserRes> changePassword(@RequestBody ChangePasswordReq changePasswordReq) {
-        UserRes result = service.changePassword(changePasswordReq);
-
-        return ApiResponse.onSuccess(HttpStatus.OK, result);
-    }
-
-    @PatchMapping("/nickname")
-    public ApiResponse<UserRes> changeNickname(@RequestBody ChangeNicknameReq changeNicknameReq) {
-        UserRes result = service.changeNickname(changeNicknameReq);
+    @PutMapping
+    public ApiResponse<UpdateUserInfoRes> updateUserInformation(@RequestBody UpdateUserInfoReq updateUserInfoReq) {
+        UpdateUserInfoRes result = service.updateUserInformation(updateUserInfoReq);
 
         return ApiResponse.onSuccess(HttpStatus.OK, result);
     }
