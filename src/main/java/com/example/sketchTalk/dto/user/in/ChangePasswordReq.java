@@ -1,14 +1,8 @@
 package com.example.sketchTalk.dto.user.in;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class ChangePasswordReq {
-    private String loginId;
-    private String oldPassword;
-    private String newPassword;
+public record ChangePasswordReq(
+        String loginId,
+        String oldPassword,
+        String newPassword
+){
 }

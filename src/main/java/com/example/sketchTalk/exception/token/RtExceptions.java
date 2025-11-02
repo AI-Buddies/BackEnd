@@ -1,4 +1,4 @@
-package com.example.sketchTalk.exception.setting;
+package com.example.sketchTalk.exception.token;
 
 import com.example.sketchTalk._core.error.BaseErrorCode;
 import lombok.Getter;
@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum SettingExceptions implements BaseErrorCode {
-    INVALID_VALUE(HttpStatus.BAD_REQUEST, "S1", "잘못된 값입니다.");
+public enum RtExceptions implements BaseErrorCode {
+    INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "RT1", "토큰이 유효하지 않거나, 만료되었습니다.");
 
     private final HttpStatus status;
     private final String code;
