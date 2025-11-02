@@ -33,3 +33,17 @@ spring:
       enabled: true
       maxFileSize: 200MB
       maxRequestSize: 300MB
+
+cloud:
+  aws:
+    s3:
+      bucket: sketchtalk-s3
+      url: ${S3URL}
+    credentials:
+      access-key: ${ACCESS_KEY}
+      secret-key: ${SECRET_KEY}
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
