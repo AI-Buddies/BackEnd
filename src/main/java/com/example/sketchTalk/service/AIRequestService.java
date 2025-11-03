@@ -1,7 +1,9 @@
 package com.example.sketchTalk.service;
 
-import com.example.sketchTalk.dto.chat.in.DiaryReq;
-import com.example.sketchTalk.dto.chat.in.ReplyReq;
+import com.example.sketchTalk.dto.chat.out.ImageRes;
+import com.example.sketchTalk.dto.webClient.out.DiaryReq;
+import com.example.sketchTalk.dto.webClient.out.ImageReq;
+import com.example.sketchTalk.dto.webClient.out.ReplyReq;
 import com.example.sketchTalk.dto.chat.out.DiaryRes;
 import com.example.sketchTalk.dto.chat.out.ReplyRes;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +54,24 @@ public class AIRequestService {
                             });
                 })
                 .bodyToMono(DiaryRes.class);
+        return result.block();
+    }
+
+    public ImageRes requestImage(long userId, String content) {
+        String uri = baseURL + "/image";
+        ImageReq imageReq = new ImageReq(userId, content);
+        Mono<ImageRes> result = webClient.post()//현재 명세서에는 GET으로 되어있음 -> 변경 요청
+                .uri(uri)
+                .bodyValue(imageReq)
+                .retrieve()
+                .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(), response -> {
+                    return response.bodyToMono(String.class)
+                            .flatMap(body -> {
+                                System.err.println("FastAPI 422 Error Body: " + body);
+                                return Mono.error(new RuntimeException("FastAPI 요청 실패: " + response.statusCode() + " - " + body));
+                            });
+                })
+                .bodyToMono(ImageRes.class);
         return result.block();
     }
 }
