@@ -14,14 +14,15 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
-    @Column(name="diary_id")
-    private Long diaryId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "diary_id", nullable = false)
+    private Diary diary;
 
     @Column(name="content")
     private String content;
 
-    public Comment(Long diaryId, String content) {
-        this.diaryId = diaryId;
+    public Comment(Diary diary, String content) {
+        this.diary = diary;
         this.content = content;
     }
 }
