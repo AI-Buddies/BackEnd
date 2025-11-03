@@ -2,8 +2,10 @@ package com.example.sketchTalk.service;
 
 import com.example.sketchTalk._core.error.CustomException;
 import com.example.sketchTalk.dto.chat.in.ChatReq;
+import com.example.sketchTalk.dto.chat.out.DiaryRes;
 import com.example.sketchTalk.dto.chat.out.ReplyRes;
 import com.example.sketchTalk.dto.webClient.in.ChatDataBody;
+import com.example.sketchTalk.dto.webClient.in.DiaryDataBody;
 import com.example.sketchTalk.exception.chat.ChatExceptions;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,5 +22,12 @@ public class ChatService {
         ReplyRes replyRes = aiRequestService.sendChat(userId, chatReq.dialog());
         if(replyRes.isSuccess()) return replyRes.data();
         else throw new CustomException(ChatExceptions.SEND_CHAT_ERROR);
+    }
+
+    public DiaryDataBody getDiary() {
+        long userId = 1L;
+        DiaryRes diaryRes = aiRequestService.requestDiary(userId);
+        if(diaryRes.isSuccess()) return diaryRes.data();
+        else throw new CustomException(ChatExceptions.WRITE_DIARY_ERROR);
     }
 }

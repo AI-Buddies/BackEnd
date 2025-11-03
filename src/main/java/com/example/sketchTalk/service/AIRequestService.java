@@ -1,6 +1,8 @@
 package com.example.sketchTalk.service;
 
+import com.example.sketchTalk.dto.chat.in.DiaryReq;
 import com.example.sketchTalk.dto.chat.in.ReplyReq;
+import com.example.sketchTalk.dto.chat.out.DiaryRes;
 import com.example.sketchTalk.dto.chat.out.ReplyRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +34,24 @@ public class AIRequestService {
                             });
                 })
                 .bodyToMono(ReplyRes.class);
+        return result.block();
+    }
+
+    public DiaryRes requestDiary(long userId) {
+        String uri = baseURL + "/diary";
+        DiaryReq diaryReq = new DiaryReq(userId);
+        Mono<DiaryRes> result = webClient.post()//현재 명세서에는 GET으로 되어있음 -> 변경 요청
+                .uri(uri)
+                .bodyValue(diaryReq)
+                .retrieve()
+                .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(), response -> {
+                    return response.bodyToMono(String.class)
+                            .flatMap(body -> {
+                                System.err.println("FastAPI 422 Error Body: " + body);
+                                return Mono.error(new RuntimeException("FastAPI 요청 실패: " + response.statusCode() + " - " + body));
+                            });
+                })
+                .bodyToMono(DiaryRes.class);
         return result.block();
     }
 }
