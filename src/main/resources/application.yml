@@ -19,6 +19,15 @@ spring:
         globally_quoted_identifiers: true
     open-in-view: false
 
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration:
+      ms: ${JWT_EXPIRATION_MS}
+
+  refresh:
+    duration:
+      ms: ${REFRESH_DURATION_MS}
+
   servlet:
     multipart:
       enabled: true
@@ -27,3 +36,17 @@ spring:
 
 fastapi:
   endpoint: http://43.201.10.241
+  
+cloud:
+  aws:
+    s3:
+      bucket: sketchtalk-s3
+      url: ${S3URL}
+    credentials:
+      access-key: ${ACCESS_KEY}
+      secret-key: ${SECRET_KEY}
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
