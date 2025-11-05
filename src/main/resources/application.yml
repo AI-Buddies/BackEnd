@@ -12,7 +12,7 @@ spring:
     show-sql: true
     defer-datasource-initialization: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -34,6 +34,9 @@ spring:
       maxFileSize: 200MB
       maxRequestSize: 300MB
 
+fastapi:
+  endpoint: http://43.201.10.241
+  
 cloud:
   aws:
     s3:
