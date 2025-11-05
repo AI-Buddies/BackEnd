@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -42,6 +44,11 @@ public class Diary {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    @OneToOne(mappedBy = "diary", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
+    private Image image;
+
+    @OneToOne(mappedBy = "diary", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
+    private Comment comment;
 
     public Diary(SaveDiaryReq saveDiaryReq) {
         this.userId = saveDiaryReq.userId();//추후에 User로 변경
