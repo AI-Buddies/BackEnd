@@ -2,10 +2,7 @@ package com.example.sketchTalk.controller;
 
 import com.example.sketchTalk._core.common.ApiResponse;
 import com.example.sketchTalk.dto.user.in.*;
-import com.example.sketchTalk.dto.user.out.UpdateUserInfoRes;
-import com.example.sketchTalk.dto.user.out.LoginRes;
-import com.example.sketchTalk.dto.user.out.RegisterRes;
-import com.example.sketchTalk.dto.user.out.UserRes;
+import com.example.sketchTalk.dto.user.out.*;
 import com.example.sketchTalk.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,6 +20,13 @@ public class UserController {
     @PostMapping("/login")
     public ApiResponse<LoginRes> login(@RequestBody LoginReq loginReq) {
         LoginRes result = service.login(loginReq);
+
+        return ApiResponse.onSuccess(HttpStatus.OK, result);
+    }
+
+    @GetMapping("/id/availability")
+    public ApiResponse<CheckDuplicateIdRes> checkDuplicateId(@RequestBody CheckDuplicateIdReq checkDuplicateIdReq) {
+        CheckDuplicateIdRes result = service.checkDuplicateId(checkDuplicateIdReq);
 
         return ApiResponse.onSuccess(HttpStatus.OK, result);
     }

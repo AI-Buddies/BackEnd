@@ -2,10 +2,7 @@ package com.example.sketchTalk.service;
 
 import com.example.sketchTalk._core.error.CustomException;
 import com.example.sketchTalk.dto.user.in.*;
-import com.example.sketchTalk.dto.user.out.UpdateUserInfoRes;
-import com.example.sketchTalk.dto.user.out.LoginRes;
-import com.example.sketchTalk.dto.user.out.RegisterRes;
-import com.example.sketchTalk.dto.user.out.UserRes;
+import com.example.sketchTalk.dto.user.out.*;
 import com.example.sketchTalk.exception.user.UserExceptions;
 import com.example.sketchTalk.model.entity.RefreshToken;
 import com.example.sketchTalk.model.entity.User;
@@ -62,6 +59,14 @@ public class UserService {
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getUserId());
 
         return new LoginRes(user.getNickname(), accessToken, refreshToken.getToken());
+    }
+
+    public CheckDuplicateIdRes checkDuplicateId(CheckDuplicateIdReq checkDuplicateIdReq) {
+        String loginId = checkDuplicateIdReq.loginId();
+
+        boolean isAvailable = !repository.existsByLoginId(loginId);
+
+        return new CheckDuplicateIdRes(isAvailable);
     }
 
     @Transactional
