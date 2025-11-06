@@ -12,7 +12,7 @@ spring:
     show-sql: true
     defer-datasource-initialization: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -33,3 +33,20 @@ spring:
       enabled: true
       maxFileSize: 200MB
       maxRequestSize: 300MB
+
+fastapi:
+  endpoint: http://43.201.10.241
+  
+cloud:
+  aws:
+    s3:
+      bucket: sketchtalk-s3
+      url: ${S3URL}
+    credentials:
+      access-key: ${ACCESS_KEY}
+      secret-key: ${SECRET_KEY}
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
