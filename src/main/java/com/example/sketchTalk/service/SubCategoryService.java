@@ -25,7 +25,7 @@ public class SubCategoryService {
     public List<SubCategoryNamesDTO> findAllSubCategories() {
         List<SubCategory> subCategories = subCategoryRepository.findAll();
         return subCategories.stream()
-                .map(subCategory -> new SubCategoryNamesDTO(subCategory.getSub_id(), subCategory.getCategory(), subCategory.getName()))
+                .map(subCategory -> new SubCategoryNamesDTO(subCategory.getSubId(), subCategory.getCategory(), subCategory.getName()))
                 .collect(Collectors.toList());
     }
 
@@ -43,7 +43,7 @@ public class SubCategoryService {
 
     public List<Long> subOfCategory(Long categoryId) {
         return subCategoryRepository.findAll().stream()
-                .map(SubCategory::getSub_id)
+                .map(SubCategory::getSubId)
                 .collect(Collectors.toList());
     }
 }
