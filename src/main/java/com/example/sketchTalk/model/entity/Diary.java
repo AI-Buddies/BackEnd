@@ -24,10 +24,9 @@ public class Diary {
     @Column(name="diary_id")
     private Long diaryId;
 
-    //@ManyToOne <- 추후에 User로 변경
-    //@JoinColumn(name="user_id")
-    @Column(name="user_id")
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
 
     @Column(nullable=false)
     private String title;
@@ -50,8 +49,8 @@ public class Diary {
     @OneToOne(mappedBy = "diary", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
     private Comment comment;
 
-    public Diary(SaveDiaryReq saveDiaryReq) {
-        this.userId = saveDiaryReq.userId();//추후에 User로 변경
+    public Diary(User user, SaveDiaryReq saveDiaryReq) {
+        this.user = user;
         this.title = saveDiaryReq.title();
         this.content = saveDiaryReq.content();
         this.date = saveDiaryReq.date();
