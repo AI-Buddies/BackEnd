@@ -1,15 +1,11 @@
 package com.example.sketchTalk.controller;
 
 import com.example.sketchTalk._core.common.ApiResponse;
-import com.example.sketchTalk.dto.user.in.ChangeNicknameReq;
-import com.example.sketchTalk.dto.user.in.ChangePasswordReq;
-import com.example.sketchTalk.dto.user.in.LoginReq;
-import com.example.sketchTalk.dto.user.in.RegisterReq;
-import com.example.sketchTalk.dto.user.out.LoginRes;
-import com.example.sketchTalk.dto.user.out.RegisterRes;
-import com.example.sketchTalk.dto.user.out.UserRes;
+import com.example.sketchTalk.dto.user.in.*;
+import com.example.sketchTalk.dto.user.out.*;
 import com.example.sketchTalk.service.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,6 +24,13 @@ public class UserController {
         return ApiResponse.onSuccess(HttpStatus.OK, result);
     }
 
+    @GetMapping("/id/availability")
+    public ApiResponse<CheckDuplicateIdRes> checkDuplicateId(@RequestBody CheckDuplicateIdReq checkDuplicateIdReq) {
+        CheckDuplicateIdRes result = service.checkDuplicateId(checkDuplicateIdReq);
+
+        return ApiResponse.onSuccess(HttpStatus.OK, result);
+    }
+
     @PostMapping("/register")
     public ApiResponse<RegisterRes> register(@RequestBody RegisterReq registerReq) {
         RegisterRes result = service.register(registerReq);
@@ -35,25 +38,23 @@ public class UserController {
         return ApiResponse.onSuccess(HttpStatus.CREATED, result);
     }
 
-    // TODO: 로그아웃 추가
-
-    @PatchMapping("/password")
-    public ApiResponse<UserRes> changePassword(@RequestBody ChangePasswordReq changePasswordReq) {
-        UserRes result = service.changePassword(changePasswordReq);
+    @PostMapping("/logout")
+    public ApiResponse<UserRes> logout(@AuthenticationPrincipal Long userId) {
+        UserRes result = service.logout(userId);
 
         return ApiResponse.onSuccess(HttpStatus.OK, result);
     }
 
-    @PatchMapping("/nickname")
-    public ApiResponse<UserRes> changeNickname(@RequestBody ChangeNicknameReq changeNicknameReq) {
-        UserRes result = service.changeNickname(changeNicknameReq);
+    @PutMapping
+    public ApiResponse<UpdateUserInfoRes> updateUserInformation(@RequestBody UpdateUserInfoReq updateUserInfoReq) {
+        UpdateUserInfoRes result = service.updateUserInformation(updateUserInfoReq);
 
         return ApiResponse.onSuccess(HttpStatus.OK, result);
     }
 
     @DeleteMapping
-    public ApiResponse<UserRes> delete(@RequestBody LoginReq loginReq) {
-        UserRes result = service.delete(loginReq);
+    public ApiResponse<UserRes> delete(@AuthenticationPrincipal Long userId) {
+        UserRes result = service.delete(userId);
 
         return ApiResponse.onSuccess(HttpStatus.OK, result);
     }

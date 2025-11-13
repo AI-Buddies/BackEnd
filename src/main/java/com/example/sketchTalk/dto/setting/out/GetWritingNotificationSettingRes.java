@@ -4,10 +4,9 @@ import com.example.sketchTalk.model.entity.setting.enums.AlarmUnit;
 
 import java.time.LocalTime;
 
-public record GetRemainderAlarmSettingRes(
-        boolean canAlarm,
-        LocalTime alarmTime,
-        int alarmValue,
-        AlarmUnit alarmUnit
+public record GetWritingNotificationSettingRes(
+        boolean canNotify,
+        LocalTime notificationTime,
+        AlarmUnit notificationUnit
 ) {
 }

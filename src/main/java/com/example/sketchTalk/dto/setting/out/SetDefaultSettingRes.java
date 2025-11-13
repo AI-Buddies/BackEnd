@@ -4,6 +4,5 @@ import lombok.Builder;
 
 @Builder
 public record SetDefaultSettingRes (
-        Long userId,
         boolean canAlarm
 ) {}

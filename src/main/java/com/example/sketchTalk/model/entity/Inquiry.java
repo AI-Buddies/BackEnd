@@ -33,8 +33,8 @@ public class Inquiry {
     @Column(name = "is_answered", nullable = false)
     private Boolean isAnswered = false;
 
-    public Inquiry(SendInquiryReq sendInquiryReq) {
-        this.userId = sendInquiryReq.userId();
+    public Inquiry(Long userId, SendInquiryReq sendInquiryReq) {
+        this.userId = userId;
         this.title = sendInquiryReq.title();
         this.content = sendInquiryReq.content();
     }

@@ -2,12 +2,12 @@ package com.example.sketchTalk.service.setting;
 
 import com.example.sketchTalk.model.entity.setting.AudioSetting;
 import com.example.sketchTalk.model.entity.setting.DefaultSetting;
-import com.example.sketchTalk.model.entity.setting.alarm.LookbackAlarmSetting;
-import com.example.sketchTalk.model.entity.setting.alarm.RemainderAlarmSetting;
+import com.example.sketchTalk.model.entity.setting.notification.PastNotificationSetting;
+import com.example.sketchTalk.model.entity.setting.notification.WritingNotificationSetting;
 import com.example.sketchTalk.repository.setting.AudioSettingRepository;
 import com.example.sketchTalk.repository.setting.DefaultSettingRepository;
-import com.example.sketchTalk.repository.setting.alarm.LookbackAlarmSettingRepository;
-import com.example.sketchTalk.repository.setting.alarm.RemainderAlarmSettingRepository;
+import com.example.sketchTalk.repository.setting.notification.PastNotificationSettingRepository;
+import com.example.sketchTalk.repository.setting.notification.WritingNotificationSettingRepository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,16 +19,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class SettingProvisioningService {
     private final AudioSettingRepository audioSettingRepository;
     private final DefaultSettingRepository defaultSettingRepository;
-    private final LookbackAlarmSettingRepository lookbackAlarmSettingRepository;
-    private final RemainderAlarmSettingRepository remainderAlarmSettingRepository;
+    private final PastNotificationSettingRepository pastNotificationSettingRepository;
+    private final WritingNotificationSettingRepository writingNotificationSettingRepository;
 
     // UserService.register() 에서만 호출
     @Transactional(propagation = Propagation.MANDATORY)
     public void provisionDefaultSetting(Long userId) {
         audioSettingRepository.save(new AudioSetting(userId));
         defaultSettingRepository.save(new DefaultSetting(userId));
-        lookbackAlarmSettingRepository.save(new LookbackAlarmSetting(userId));
-        remainderAlarmSettingRepository.save(new RemainderAlarmSetting(userId));
+        pastNotificationSettingRepository.save(new PastNotificationSetting(userId));
+        writingNotificationSettingRepository.save(new WritingNotificationSetting(userId));
     }
 
     //UserService.delete() 에서만 호출
@@ -36,7 +36,7 @@ public class SettingProvisioningService {
     public void deleteUserSetting(Long userId) {
         audioSettingRepository.deleteById(userId);
         defaultSettingRepository.deleteById(userId);
-        lookbackAlarmSettingRepository.deleteById(userId);
-        remainderAlarmSettingRepository.deleteById(userId);
+        pastNotificationSettingRepository.deleteById(userId);
+        writingNotificationSettingRepository.deleteById(userId);
     }
 }

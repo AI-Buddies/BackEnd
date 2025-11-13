@@ -6,11 +6,10 @@ import lombok.Builder;
 import java.time.LocalTime;
 
 @Builder
-public record SetRemainderAlarmSettingRes(
-        Long userId,
-        boolean canAlarm,
-        LocalTime alarmTime,
-        int alarmValue,
-        AlarmUnit alarmUnit
+public record SetPastNotificationSettingRes(
+        boolean canNotify,
+        LocalTime notificationTime,
+        int notificationValue,
+        AlarmUnit notificationUnit
 ) {
 }

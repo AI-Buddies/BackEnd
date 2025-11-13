@@ -51,6 +51,7 @@ public class SecurityConfig {
                                 "/health-check/**",
                                 "/user/register",
                                 "/user/login",
+                                "/user/id/availability",
                                 "/refresh"
                         ).permitAll()
 
