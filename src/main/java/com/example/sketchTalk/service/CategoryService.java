@@ -1,10 +1,17 @@
 package com.example.sketchTalk.service;
 
 import com.example.sketchTalk.dto.category.out.CategoryCompletionRes;
+import com.example.sketchTalk.dto.category.out.CategoryDetailRes;
+import com.example.sketchTalk.dto.category.out.CategoryListRes;
+import com.example.sketchTalk.dto.category.out.SubCategoryRes;
+import com.example.sketchTalk.model.entity.achievement.Category;
+import com.example.sketchTalk.model.entity.achievement.SubCategory;
 import com.example.sketchTalk.model.entity.achievement.UserCategory;
 import com.example.sketchTalk.model.entity.achievement.UserCategoryKey;
 import com.example.sketchTalk.repository.achievement.CategoryRepository;
+import com.example.sketchTalk.repository.achievement.SubCategoryRepository;
 import com.example.sketchTalk.repository.achievement.UserCategoryRepository;
+import com.example.sketchTalk.repository.achievement.UserSubRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +24,8 @@ import java.util.stream.Collectors;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final UserCategoryRepository userCategoryRepository;
+    private final SubCategoryRepository subCategoryRepository;
+    private final UserSubRepository userSubRepository;
 
     public List<CategoryCompletionRes> updateCategory(long userId, List<Long> categoryIds) {
         List<CategoryCompletionRes> results = CompletedCategoryInfo(userId, categoryIds);
@@ -38,6 +47,77 @@ public class CategoryService {
                 ))
                 .collect(Collectors.toList());
     }
+
+    // 도전과제 리스트 조회
+    public List<CategoryListRes> getAcheivementList(Long userId, String status) {
+        List<Category> categories = categoryRepository.findAll();
+
+        List<CategoryListRes> list = categories.stream().map(category -> {
+            int total = subCategoryRepository.countByCategory(category);
+
+            int completed = userSubRepository.countByUserSubKey_UserIdAndUserSubKey_SubIdInAndIsClearTrue(
+                    userId,
+                    subCategoryRepository.findIdsByCategory(category)
+            );
+
+            boolean isCompleted = (total > 0 && completed >= total);
+
+            return new CategoryListRes(
+                    category.getCategoryId(),
+                    category.getName(),
+                    completed,
+                    total,
+                    isCompleted
+            );
+        }).collect(Collectors.toList());
+
+        return switch (status.toLowerCase()) {
+            case "completed" -> list.stream()
+                    .filter(CategoryListRes::isCompleted)
+                    .collect(Collectors.toList());
+            case "incomplete" -> list.stream()
+                    .filter(c -> !c.isCompleted())
+                    .collect(Collectors.toList());
+            default -> list;
+        };
+    }
+
+    // 도전과제 단일조회
+    public CategoryDetailRes getAchievementDetail(Long userId, Long categoryId, String status) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 도전과제입니다."));
+
+        List<SubCategory> subs = subCategoryRepository.findByCategory(category);
+
+        List<SubCategoryRes> subResList = subs.stream().map(sub -> {
+            boolean completed = userSubRepository.existsByUserSubKey_UserIdAndUserSubKey_SubIdAndIsClearTrue(userId, sub.getSubId());
+            return new SubCategoryRes(sub.getSubId(), sub.getName(), completed);
+        }).collect(Collectors.toList());
+
+        int total = subResList.size();
+        int completedCount = (int) subResList.stream().filter(SubCategoryRes::completed).count();
+        boolean isCompleted = (total > 0 && completedCount == total);
+
+        List<SubCategoryRes> filteredSubs = switch (status.toLowerCase()) {
+            case "completed" -> subResList.stream()
+                    .filter(SubCategoryRes::completed)
+                    .collect(Collectors.toList());
+            case "incomplete" -> subResList.stream()
+                    .filter(s -> !s.completed())
+                    .collect(Collectors.toList());
+            default -> subResList;
+        };
+
+        return new CategoryDetailRes(
+                category.getCategoryId(),
+                category.getName(),
+                completedCount,
+                total,
+                isCompleted,
+                filteredSubs
+        );
+    }
+
 }
 
 
