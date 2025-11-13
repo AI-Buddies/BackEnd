@@ -4,6 +4,8 @@ import com.example.sketchTalk._core.common.ApiResponse;
 import com.example.sketchTalk.dto.chat.in.ChatReq;
 import com.example.sketchTalk.dto.chat.in.DrawReq;
 import com.example.sketchTalk.dto.chat.in.PrevDrawReq;
+import com.example.sketchTalk.dto.chat.in.SelectedImageReq;
+import com.example.sketchTalk.dto.chat.out.CompletedDiaryRes;
 import com.example.sketchTalk.dto.webClient.in.ChatDataBody;
 import com.example.sketchTalk.dto.webClient.in.DiaryDataBody;
 import com.example.sketchTalk.dto.webClient.in.ImageDataBody;
@@ -41,11 +43,11 @@ public class ChatController {
         return ApiResponse.onSuccess(HttpStatus.CREATED, res);
     }
 
-    @PostMapping("image/retry")
+    @PostMapping("/image/retry")
     public ApiResponse<SecondImageDataBody> retryDrawImage(@RequestBody PrevDrawReq req, @AuthenticationPrincipal Long userId) {
         DrawReq drawReq = new DrawReq(req.content(), req.style());
         ImageDataBody newImageRes = chatService.getImage(drawReq, userId);
-        SecondImageDataBody secondImageRes = chatService.getTwoImages(newImageRes, req.prevImageUrl());
+        SecondImageDataBody secondImageRes = chatService.getTwoImages(req.style(), newImageRes, req.prevImageUrl());
         return ApiResponse.onSuccess(HttpStatus.CREATED, secondImageRes);
     }
 }

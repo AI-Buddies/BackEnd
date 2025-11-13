@@ -11,6 +11,11 @@ import com.example.sketchTalk.dto.webClient.in.DiaryDataBody;
 import com.example.sketchTalk.dto.webClient.in.ImageDataBody;
 import com.example.sketchTalk.dto.webClient.in.SecondImageDataBody;
 import com.example.sketchTalk.exception.chat.ChatExceptions;
+import com.example.sketchTalk.exception.diary.DiaryExceptions;
+import com.example.sketchTalk.model.Style;
+import com.example.sketchTalk.model.entity.Diary;
+import com.example.sketchTalk.model.entity.Image;
+import com.example.sketchTalk.repository.DiaryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,11 +40,11 @@ public class ChatService {
 
     public ImageDataBody getImage(DrawReq req, Long userId) {
         ImageRes imageRes = aiRequestService.requestImage(userId, req);
-        if(imageRes.isSuccess()) return imageRes.data();
+        if(imageRes.isSuccess()) return new ImageDataBody(imageRes.data().diaryId(), req.style(), imageRes.data().imageURL());
         else throw new CustomException(ChatExceptions.DRAW_IMAGE_ERROR);
     }
 
-    public SecondImageDataBody getTwoImages(ImageDataBody imageDataBody, String prevImageUrl) {
+    public SecondImageDataBody getTwoImages(Style style, ImageDataBody imageDataBody, String prevImageUrl) {
         return new SecondImageDataBody(imageDataBody.diaryId(), imageDataBody.imageURL(), prevImageUrl);
     }
 }
