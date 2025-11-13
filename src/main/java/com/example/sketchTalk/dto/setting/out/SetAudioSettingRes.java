@@ -6,7 +6,6 @@ import lombok.Builder;
 
 @Builder
 public record SetAudioSettingRes(
-        Long userId,
         VoiceType voiceType,
         double voiceSpeed,
         Bgm bgm

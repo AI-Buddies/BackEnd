@@ -1,13 +1,8 @@
 package com.example.sketchTalk.service;
 
 import com.example.sketchTalk._core.error.CustomException;
-import com.example.sketchTalk.dto.user.in.ChangeNicknameReq;
-import com.example.sketchTalk.dto.user.in.ChangePasswordReq;
-import com.example.sketchTalk.dto.user.in.LoginReq;
-import com.example.sketchTalk.dto.user.in.RegisterReq;
-import com.example.sketchTalk.dto.user.out.LoginRes;
-import com.example.sketchTalk.dto.user.out.RegisterRes;
-import com.example.sketchTalk.dto.user.out.UserRes;
+import com.example.sketchTalk.dto.user.in.*;
+import com.example.sketchTalk.dto.user.out.*;
 import com.example.sketchTalk.exception.user.UserExceptions;
 import com.example.sketchTalk.model.entity.RefreshToken;
 import com.example.sketchTalk.model.entity.User;
@@ -66,6 +61,14 @@ public class UserService {
         return new LoginRes(user.getNickname(), accessToken, refreshToken.getToken());
     }
 
+    public CheckDuplicateIdRes checkDuplicateId(CheckDuplicateIdReq checkDuplicateIdReq) {
+        String loginId = checkDuplicateIdReq.loginId();
+
+        boolean isAvailable = !repository.existsByLoginId(loginId);
+
+        return new CheckDuplicateIdRes(isAvailable);
+    }
+
     @Transactional
     public RegisterRes register(RegisterReq registerReq) {
 
@@ -74,13 +77,6 @@ public class UserService {
                 .ifPresent(user -> {
                     throw new CustomException(UserExceptions.ID_ALREADY_EXISTS);
                 });
-
-        // TODO: 비밀번호 제약조건이 필요하다면 이곳에 넣기!!
-
-        // 2. 생년월일 타당성 확인
-        if (registerReq.birthdate().isAfter(LocalDate.now())) {
-            throw new CustomException(UserExceptions.BIRTHDATE_INVALID);
-        }
 
         User newUser = User.builder()
                 .loginId(registerReq.loginId())
@@ -91,47 +87,43 @@ public class UserService {
 
         repository.save(newUser);
 
-        // 3. 기본 Setting 값 설정
+        // 2. 기본 Setting 값 설정
         settingProvisioningService.provisionDefaultSetting(newUser.getUserId());
 
-        // 4. 토큰 발급
+        // 3. 토큰 발급
         String accessToken = jwtUtils.generateJwtToken(newUser.getUserId());
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(newUser.getUserId());
 
         return new RegisterRes(newUser.getNickname(), accessToken, refreshToken.getToken());
     }
 
-    // TODO: 로그아웃 추가
+    public UserRes logout(Long userId) {
+        User user = repository.findByUserId(userId)
+                .orElseThrow( () -> new CustomException(UserExceptions.ID_NOT_FOUND));
 
-    public UserRes changePassword(ChangePasswordReq changePasswordReq) {
-        LoginReq loginReq = new LoginReq(changePasswordReq.loginId(), changePasswordReq.oldPassword());
-
-        User user = authenticateAndGetUser(loginReq);
-
-        // TODO: 비밀번호 제약조건이 필요하다면 이곳에 넣기!!
-
-        user.updatePassword(passwordEncoder.encode(changePasswordReq.newPassword()));
-
-        repository.save(user);
-
-        return new UserRes(user.getNickname());
-    }
-
-    public UserRes changeNickname(ChangeNicknameReq changeNicknameReq) {
-        LoginReq loginReq = new LoginReq(changeNicknameReq.loginId(), changeNicknameReq.password());
-
-        User user = authenticateAndGetUser(loginReq);
-
-        user.updateNickname(changeNicknameReq.newNickname());
-
-        repository.save(user);
+        refreshTokenService.deleteByUserId(userId);
 
         return new UserRes(user.getNickname());
     }
 
     @Transactional
-    public UserRes delete(LoginReq loginReq) {
-        User user = authenticateAndGetUser(loginReq);
+    public UpdateUserInfoRes updateUserInformation(UpdateUserInfoReq req) {
+        User user = repository.findByLoginId(req.loginId())
+                .orElseThrow( () -> new CustomException(UserExceptions.ID_NOT_FOUND));
+
+        user.updatePassword(passwordEncoder.encode(req.password()));
+        user.updateNickname(req.nickname());
+        user.updateBirthdate(req.birthdate());
+
+        repository.save(user);
+
+        return new UpdateUserInfoRes(user.getNickname(), user.getBirthdate());
+    }
+
+    @Transactional
+    public UserRes delete(Long userId) {
+        User user = repository.findByUserId(userId)
+                .orElseThrow( () -> new CustomException(UserExceptions.ID_NOT_FOUND));
 
         repository.delete(user);
 

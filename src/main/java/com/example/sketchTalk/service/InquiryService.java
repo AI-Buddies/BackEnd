@@ -16,12 +16,11 @@ public class InquiryService {
     }
 
     @Transactional
-    public SendInquiryRes sendInquiry(SendInquiryReq req) {
-        Inquiry inquiry = new Inquiry(req);
+    public SendInquiryRes sendInquiry(Long userId, SendInquiryReq req) {
+        Inquiry inquiry = new Inquiry(userId, req);
         inquiryRepository.save(inquiry);
 
         SendInquiryRes sendInquiryRes = SendInquiryRes.builder()
-                .userId(inquiry.getUserId())
                 .title(inquiry.getTitle())
                 .content(inquiry.getContent())
                 .build();

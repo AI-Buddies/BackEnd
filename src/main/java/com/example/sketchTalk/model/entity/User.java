@@ -1,5 +1,7 @@
 package com.example.sketchTalk.model.entity;
 
+import com.example.sketchTalk._core.error.CustomException;
+import com.example.sketchTalk.exception.user.UserExceptions;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -41,5 +43,9 @@ public class User {
 
     public void updateNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public void updateBirthdate(LocalDate birthdate) {
+        this.birthdate = birthdate;
     }
 }
