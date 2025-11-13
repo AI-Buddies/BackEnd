@@ -52,13 +52,13 @@ public class DiaryController {
 
     @GetMapping("/{id}/preview")
     public ApiResponse<GetDiaryPreviewRes> getDiaryPreview(@PathVariable Long id, @AuthenticationPrincipal Long userId) {
-        GetDiaryPreviewRes getDiaryPreviewRes = diaryService.getDiaryPreviewById(id, userId);
+        GetDiaryPreviewRes getDiaryPreviewRes = diaryService.getDiaryPreviewById(id);
         return ApiResponse.onSuccess(HttpStatus.OK, getDiaryPreviewRes);
     }
 
     @GetMapping("/{id}")
     public ApiResponse<GetDiaryDetailRes> getDiaryDetail(@PathVariable Long id, @AuthenticationPrincipal Long userId) {
-        GetDiaryDetailRes getDiaryDetailRes = diaryService.getDiaryDetailById(id, userId);
+        GetDiaryDetailRes getDiaryDetailRes = diaryService.getDiaryDetailById(id);
         return ApiResponse.onSuccess(HttpStatus.OK, getDiaryDetailRes);
     }
 }
