@@ -9,6 +9,7 @@ import com.example.sketchTalk.dto.chat.out.ReplyRes;
 import com.example.sketchTalk.dto.webClient.in.ChatDataBody;
 import com.example.sketchTalk.dto.webClient.in.DiaryDataBody;
 import com.example.sketchTalk.dto.webClient.in.ImageDataBody;
+import com.example.sketchTalk.dto.webClient.in.SecondImageDataBody;
 import com.example.sketchTalk.exception.chat.ChatExceptions;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,5 +37,9 @@ public class ChatService {
         ImageRes imageRes = aiRequestService.requestImage(userId, req);
         if(imageRes.isSuccess()) return imageRes.data();
         else throw new CustomException(ChatExceptions.DRAW_IMAGE_ERROR);
+    }
+
+    public SecondImageDataBody getTwoImages(ImageDataBody imageDataBody, String prevImageUrl) {
+        return new SecondImageDataBody(imageDataBody.diaryId(), imageDataBody.imageURL(), prevImageUrl);
     }
 }

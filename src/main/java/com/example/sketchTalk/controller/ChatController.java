@@ -3,9 +3,11 @@ package com.example.sketchTalk.controller;
 import com.example.sketchTalk._core.common.ApiResponse;
 import com.example.sketchTalk.dto.chat.in.ChatReq;
 import com.example.sketchTalk.dto.chat.in.DrawReq;
+import com.example.sketchTalk.dto.chat.in.PrevDrawReq;
 import com.example.sketchTalk.dto.webClient.in.ChatDataBody;
 import com.example.sketchTalk.dto.webClient.in.DiaryDataBody;
 import com.example.sketchTalk.dto.webClient.in.ImageDataBody;
+import com.example.sketchTalk.dto.webClient.in.SecondImageDataBody;
 import com.example.sketchTalk.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,5 +39,13 @@ public class ChatController {
     public ApiResponse<ImageDataBody> drawImage(@RequestBody DrawReq req, @AuthenticationPrincipal Long userId) {
         ImageDataBody res = chatService.getImage(req, userId);
         return ApiResponse.onSuccess(HttpStatus.CREATED, res);
+    }
+
+    @PostMapping("image/retry")
+    public ApiResponse<SecondImageDataBody> retryDrawImage(@RequestBody PrevDrawReq req, @AuthenticationPrincipal Long userId) {
+        DrawReq drawReq = new DrawReq(req.content(), req.style());
+        ImageDataBody newImageRes = chatService.getImage(drawReq, userId);
+        SecondImageDataBody secondImageRes = chatService.getTwoImages(newImageRes, req.prevImageUrl());
+        return ApiResponse.onSuccess(HttpStatus.CREATED, secondImageRes);
     }
 }
