@@ -19,24 +19,21 @@ public class ChatService {
 
     private final AIRequestService aiRequestService;
 
-    public ChatDataBody getReply(ChatReq chatReq) {
-        long userId = 1L;
+    public ChatDataBody getReply(ChatReq chatReq, Long userId) {
         System.out.println("text : " + chatReq.dialog());
         ReplyRes replyRes = aiRequestService.sendChat(userId, chatReq.dialog());
         if(replyRes.isSuccess()) return replyRes.data();
         else throw new CustomException(ChatExceptions.SEND_CHAT_ERROR);
     }
 
-    public DiaryDataBody getDiary() {
-        long userId = 1L;
+    public DiaryDataBody getDiary(Long userId) {
         DiaryRes diaryRes = aiRequestService.requestDiary(userId);
         if(diaryRes.isSuccess()) return diaryRes.data();
         else throw new CustomException(ChatExceptions.WRITE_DIARY_ERROR);
     }
 
-    public ImageDataBody getImage(DrawReq req) {
-        long userId = 1L;
-        ImageRes imageRes = aiRequestService.requestImage(userId, req.content());
+    public ImageDataBody getImage(DrawReq req, Long userId) {
+        ImageRes imageRes = aiRequestService.requestImage(userId, req);
         if(imageRes.isSuccess()) return imageRes.data();
         else throw new CustomException(ChatExceptions.DRAW_IMAGE_ERROR);
     }

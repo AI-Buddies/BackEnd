@@ -19,7 +19,7 @@ public class DiaryController {
     private final DiaryService diaryService;
 
     @PostMapping("/save")
-    public ApiResponse<SaveDiaryRes> saveDiary(@AuthenticationPrincipal long userId, @RequestBody SaveDiaryReq req) {
+    public ApiResponse<SaveDiaryRes> saveDiary(@AuthenticationPrincipal Long userId, @RequestBody SaveDiaryReq req) {
         SaveDiaryRes saveDiaryRes = diaryService.putDiary(userId, req);
         return ApiResponse.onSuccess(HttpStatus.CREATED, saveDiaryRes);
     }

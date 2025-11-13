@@ -1,5 +1,6 @@
 package com.example.sketchTalk.service;
 
+import com.example.sketchTalk.dto.chat.in.DrawReq;
 import com.example.sketchTalk.dto.chat.out.ImageRes;
 import com.example.sketchTalk.dto.webClient.out.DiaryReq;
 import com.example.sketchTalk.dto.webClient.out.ImageReq;
@@ -20,7 +21,7 @@ public class AIRequestService {
     @Value("${fastapi.endpoint}")
     private String baseURL;
 
-    public ReplyRes sendChat(long userId, String dialog) {
+    public ReplyRes sendChat(Long userId, String dialog) {
         String uri = baseURL + "/chat";
         ReplyReq replyReq = new ReplyReq(userId, dialog);
         Mono<ReplyRes> result = webClient.post()
@@ -39,7 +40,7 @@ public class AIRequestService {
         return result.block();
     }
 
-    public DiaryRes requestDiary(long userId) {
+    public DiaryRes requestDiary(Long userId) {
         String uri = baseURL + "/diary";
         DiaryReq diaryReq = new DiaryReq(userId);
         Mono<DiaryRes> result = webClient.post()//현재 명세서에는 GET으로 되어있음 -> 변경 요청
@@ -57,9 +58,9 @@ public class AIRequestService {
         return result.block();
     }
 
-    public ImageRes requestImage(long userId, String content) {
+    public ImageRes requestImage(Long userId, DrawReq req) {
         String uri = baseURL + "/image";
-        ImageReq imageReq = new ImageReq(userId, content);
+        ImageReq imageReq = new ImageReq(userId, req.content(), req.style());
         Mono<ImageRes> result = webClient.post()//현재 명세서에는 GET으로 되어있음 -> 변경 요청
                 .uri(uri)
                 .bodyValue(imageReq)
