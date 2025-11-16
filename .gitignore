@@ -44,3 +44,6 @@ volume
 .env*
 .env
 !.env.example
+
+### Firebase ###
+/src/main/resources/firebase/*.json
