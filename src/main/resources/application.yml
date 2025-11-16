@@ -36,6 +36,10 @@ spring:
 
 fastapi:
   endpoint: http://43.201.10.241
+
+firebase:
+  service-account: ${FIREBASE_SERVICE_ACCOUNT}
+  project-id: ${FIREBASE_PROJECT_ID}
   
 cloud:
   aws:
