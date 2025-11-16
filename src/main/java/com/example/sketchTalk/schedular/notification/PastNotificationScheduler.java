@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class PastNotificationSchedular {
+public class PastNotificationScheduler {
     private final FcmService fcmService;
     // private final DefaultSettingRepository defaultSettingRepository;
     // private final PastNotificationRepository pastNotificationRepository;

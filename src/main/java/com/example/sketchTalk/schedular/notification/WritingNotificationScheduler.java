@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class WritingNotificationSchedular {
+public class WritingNotificationScheduler {
     private final DeviceTokenRepository deviceTokenRepository;
     private final DefaultSettingRepository defaultSettingRepository;
     private final WritingNotificationSettingRepository writingNotificationSettingRepository;
