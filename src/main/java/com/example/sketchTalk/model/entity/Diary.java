@@ -65,5 +65,9 @@ public class Diary {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public void saveImage(Image image) {
+        this.image = image;
+    }
+
 
 }

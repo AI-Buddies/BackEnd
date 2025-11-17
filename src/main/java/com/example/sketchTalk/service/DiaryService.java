@@ -57,7 +57,9 @@ public class DiaryService {
                 .diaryId(diary.getDiaryId())
                 .date(diary.getDate())
                 .title(diary.getTitle())
-                .emotion(diary.getEmotion())
+                .emotion(diary.getEmotion(
+
+                ))
                 .content(diary.getContent())
                 .build();
         return modifyDiaryRes;

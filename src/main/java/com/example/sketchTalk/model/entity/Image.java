@@ -26,4 +26,10 @@ public class Image {
 
     @Column(nullable = false)
     private String url;
+
+    public Image(Diary diary, Style style, String url) {
+        this.diary = diary;
+        this.style = style;
+        this.url = url;
+    }
 }

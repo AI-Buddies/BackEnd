@@ -50,4 +50,9 @@ public class ChatController {
         SecondImageDataBody secondImageRes = chatService.getTwoImages(req.style(), newImageRes, req.prevImageUrl());
         return ApiResponse.onSuccess(HttpStatus.CREATED, secondImageRes);
     }
+
+    /*@PostMapping("/image/save")
+    public ApiResponse<CompletedDiaryRes> completeDiary(@RequestBody SelectedImageReq req) {
+        CompletedDiaryRes res = chatService.getCompletedDiary(req);
+    }*/
 }
