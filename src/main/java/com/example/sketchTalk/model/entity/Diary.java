@@ -35,6 +35,7 @@ public class Diary {
     private String content;
 
     @Column(nullable=false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
 
     @Enumerated(EnumType.STRING)
@@ -53,7 +54,7 @@ public class Diary {
         this.user = user;
         this.title = saveDiaryReq.title();
         this.content = saveDiaryReq.content();
-        this.date = saveDiaryReq.date();
+        this.date = LocalDate.now();
         this.emotion = saveDiaryReq.emotion();
         this.createdAt = LocalDateTime.now();
     }
