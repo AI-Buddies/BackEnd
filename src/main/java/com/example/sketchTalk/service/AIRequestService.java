@@ -20,6 +20,8 @@ public class AIRequestService {
     private final WebClient webClient;
     @Value("${fastapi.endpoint}")
     private String baseURL;
+    @Value("${fastapi.image-endpoint}")
+    private String imageURL;
 
     public ReplyRes sendChat(Long userId, String dialog) {
         String uri = baseURL + "/chat";
@@ -43,7 +45,7 @@ public class AIRequestService {
     public DiaryRes requestDiary(Long userId) {
         String uri = baseURL + "/diary";
         DiaryReq diaryReq = new DiaryReq(userId);
-        Mono<DiaryRes> result = webClient.post()//현재 명세서에는 GET으로 되어있음 -> 변경 요청
+        Mono<DiaryRes> result = webClient.post()
                 .uri(uri)
                 .bodyValue(diaryReq)
                 .retrieve()
@@ -59,9 +61,10 @@ public class AIRequestService {
     }
 
     public ImageRes requestImage(Long userId, DrawReq req) {
-        String uri = baseURL + "/image";
+        String uri = imageURL + "/image";
+        System.out.println("uri : "+uri);
         ImageReq imageReq = new ImageReq(userId, req.content(), req.style());
-        Mono<ImageRes> result = webClient.post()//현재 명세서에는 GET으로 되어있음 -> 변경 요청
+        Mono<ImageRes> result = webClient.post()
                 .uri(uri)
                 .bodyValue(imageReq)
                 .retrieve()

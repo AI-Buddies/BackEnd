@@ -4,10 +4,7 @@ import com.example.sketchTalk._core.error.CustomException;
 import com.example.sketchTalk.dto.chat.in.ChatReq;
 import com.example.sketchTalk.dto.chat.in.DrawReq;
 import com.example.sketchTalk.dto.chat.in.SelectedImageReq;
-import com.example.sketchTalk.dto.chat.out.CompletedDiaryRes;
-import com.example.sketchTalk.dto.chat.out.DiaryRes;
-import com.example.sketchTalk.dto.chat.out.ImageRes;
-import com.example.sketchTalk.dto.chat.out.ReplyRes;
+import com.example.sketchTalk.dto.chat.out.*;
 import com.example.sketchTalk.dto.webClient.in.ChatDataBody;
 import com.example.sketchTalk.dto.webClient.in.DiaryDataBody;
 import com.example.sketchTalk.dto.webClient.in.ImageDataBody;
@@ -44,14 +41,14 @@ public class ChatService {
         else throw new CustomException(ChatExceptions.WRITE_DIARY_ERROR);
     }
 
-    public ImageDataBody getImage(DrawReq req, Long userId) {
+    public DrawImageRes getImage(DrawReq req, Long userId) {
         ImageRes imageRes = aiRequestService.requestImage(userId, req);
-        if(imageRes.isSuccess()) return new ImageDataBody(imageRes.data().diaryId(), req.style(), imageRes.data().imageURL());
+        if(imageRes.isSuccess()) return new DrawImageRes(req.diaryId(), req.style(), imageRes.data().image_url());
         else throw new CustomException(ChatExceptions.DRAW_IMAGE_ERROR);
     }
 
-    public SecondImageDataBody getTwoImages(Style style, ImageDataBody imageDataBody, String prevImageUrl) {
-        return new SecondImageDataBody(imageDataBody.diaryId(), imageDataBody.imageURL(), prevImageUrl);
+    public SecondDrawImageRes getTwoImages(Long diaryId, Style style, String newImageURL, String prevImageUrl) {
+        return new SecondDrawImageRes(diaryId, style, newImageURL, prevImageUrl);
     }
 
     /*@Transactional

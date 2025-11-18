@@ -1,11 +1,11 @@
-package com.example.sketchTalk.dto.chat.in;
+package com.example.sketchTalk.dto.chat.out;
 
 import com.example.sketchTalk.model.Style;
 
-public record PrevDrawReq(
+public record SecondDrawImageRes(
         Long diaryId,
-        String content,
         Style style,
+        String imageURL,
         String prevImageUrl
 ) {
 }

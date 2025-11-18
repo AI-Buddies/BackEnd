@@ -1,5 +1,5 @@
 package com.example.sketchTalk.model;
 
 public enum Emotion {
-    HAPPY, SAD, ANGRY, NEUTRAL
+    HAPPY, SAD, ANGRY, NEUTRAL, EXCITED
 }
