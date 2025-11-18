@@ -5,9 +5,7 @@ import com.example.sketchTalk.dto.chat.in.ChatReq;
 import com.example.sketchTalk.dto.chat.in.DrawReq;
 import com.example.sketchTalk.dto.chat.in.PrevDrawReq;
 import com.example.sketchTalk.dto.chat.in.SelectedImageReq;
-import com.example.sketchTalk.dto.chat.out.CompletedDiaryRes;
-import com.example.sketchTalk.dto.chat.out.DrawImageRes;
-import com.example.sketchTalk.dto.chat.out.SecondDrawImageRes;
+import com.example.sketchTalk.dto.chat.out.*;
 import com.example.sketchTalk.dto.webClient.in.ChatDataBody;
 import com.example.sketchTalk.dto.webClient.in.DiaryDataBody;
 import com.example.sketchTalk.dto.webClient.in.ImageDataBody;
@@ -28,14 +26,14 @@ public class ChatController {
     private final ChatService chatService;
 
     @PostMapping("")
-    public ApiResponse<ChatDataBody> chat(@RequestBody ChatReq req, @AuthenticationPrincipal Long userId) {
-        ChatDataBody res = chatService.getReply(req, userId);
+    public ApiResponse<ChatReplyRes> chat(@RequestBody ChatReq req, @AuthenticationPrincipal Long userId) {
+        ChatReplyRes res = chatService.getReply(req, userId);
         return ApiResponse.onSuccess(HttpStatus.CREATED, res);
     }
 
     @PostMapping("/diary")
-    public ApiResponse<DiaryDataBody> writeDiary(@AuthenticationPrincipal Long userId) {
-        DiaryDataBody res = chatService.getDiary(userId);
+    public ApiResponse<WriteDiaryRes> writeDiary(@AuthenticationPrincipal Long userId) {
+        WriteDiaryRes res = chatService.getDiary(userId);
         return ApiResponse.onSuccess(HttpStatus.CREATED, res);
     }
 

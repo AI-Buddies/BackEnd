@@ -28,16 +28,18 @@ public class ChatService {
     private final DiaryRepository diaryRepository;
     private final ImageRepository imageRepository;
 
-    public ChatDataBody getReply(ChatReq chatReq, Long userId) {
+    public ChatReplyRes getReply(ChatReq chatReq, Long userId) {
         System.out.println("text : " + chatReq.dialog());
         ReplyRes replyRes = aiRequestService.sendChat(userId, chatReq.dialog());
-        if(replyRes.isSuccess()) return replyRes.data();
+        if(replyRes.isSuccess()) {
+            return new ChatReplyRes(replyRes.data().reply(), replyRes.data().isSufficient(), "boy");//voice 조회 로직 추가예정
+        }
         else throw new CustomException(ChatExceptions.SEND_CHAT_ERROR);
     }
 
-    public DiaryDataBody getDiary(Long userId) {
+    public WriteDiaryRes getDiary(Long userId) {
         DiaryRes diaryRes = aiRequestService.requestDiary(userId);
-        if(diaryRes.isSuccess()) return diaryRes.data();
+        if(diaryRes.isSuccess()) return new WriteDiaryRes(diaryRes.data().title(), diaryRes.data().content(), diaryRes.data().emotion());
         else throw new CustomException(ChatExceptions.WRITE_DIARY_ERROR);
     }
 
