@@ -24,10 +24,9 @@ public class Diary {
     @Column(name="diary_id")
     private Long diaryId;
 
-    //@ManyToOne <- 추후에 User로 변경
-    //@JoinColumn(name="user_id")
-    @Column(name="user_id")
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
 
     @Column(nullable=false)
     private String title;
@@ -36,6 +35,7 @@ public class Diary {
     private String content;
 
     @Column(nullable=false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
 
     @Enumerated(EnumType.STRING)
@@ -50,11 +50,11 @@ public class Diary {
     @OneToOne(mappedBy = "diary", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
     private Comment comment;
 
-    public Diary(SaveDiaryReq saveDiaryReq) {
-        this.userId = saveDiaryReq.userId();//추후에 User로 변경
+    public Diary(User user, SaveDiaryReq saveDiaryReq) {
+        this.user = user;
         this.title = saveDiaryReq.title();
         this.content = saveDiaryReq.content();
-        this.date = saveDiaryReq.date();
+        this.date = LocalDate.now();
         this.emotion = saveDiaryReq.emotion();
         this.createdAt = LocalDateTime.now();
     }
@@ -64,6 +64,10 @@ public class Diary {
         this.content = content;
         this.emotion = emotion;
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public void saveImage(Image image) {
+        this.image = image;
     }
 
 
