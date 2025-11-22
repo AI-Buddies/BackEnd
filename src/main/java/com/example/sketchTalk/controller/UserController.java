@@ -4,6 +4,7 @@ import com.example.sketchTalk._core.common.ApiResponse;
 import com.example.sketchTalk.dto.user.in.*;
 import com.example.sketchTalk.dto.user.out.*;
 import com.example.sketchTalk.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +19,21 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ApiResponse<LoginRes> login(@RequestBody LoginReq loginReq) {
+    public ApiResponse<LoginRes> login(
+            @RequestBody LoginReq loginReq,
+            HttpServletResponse response
+    ) {
         LoginRes result = service.login(loginReq);
+
+        // Access Token 쿠키 설정
+        response.addHeader("Set-Cookie",
+                "access_token=" + result.accessToken() +
+                        "; Path=/; Max-Age=3600; HttpOnly; Secure; SameSite=None");
+
+        // Refresh Token 쿠키 설정
+        response.addHeader("Set-Cookie",
+                "refresh_token=" + result.refreshToken() +
+                        "; Path=/; Max-Age=1209600; HttpOnly; Secure; SameSite=None");
 
         return ApiResponse.onSuccess(HttpStatus.OK, result);
     }

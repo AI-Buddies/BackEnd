@@ -56,20 +56,22 @@ public class RefreshTokenService {
     }
 
     @Transactional
-    public RefreshRes reissueAccessToken(RefreshReq refreshReq) {
+    public RefreshRes reissueAccessToken(String refreshTokenValue) {
         // 1. 토큰 찾기
-        RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshReq.refreshToken())
-                .orElseThrow( () -> new CustomException(RtExceptions.INVALID_TOKEN));
+        RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshTokenValue)
+                .orElseThrow(() -> new CustomException(RtExceptions.INVALID_TOKEN));
 
         // 2. 만료일 확인
         validateNotExpired(refreshToken);
 
-        // 3. JWT, Refresh 재발급
+        // 3. AccessToken 재발급
         Long userId = refreshToken.getUserId();
         String accessToken = jwtUtils.generateJwtToken(userId);
-        refreshToken = createRefreshToken(userId);
 
-        return new RefreshRes(accessToken, refreshToken.getToken());
+        // 4. RefreshToken 재발급
+        RefreshToken newRefreshToken = createRefreshToken(userId);
+
+        return new RefreshRes(accessToken, newRefreshToken.getToken());
     }
 
     @Transactional
