@@ -5,6 +5,7 @@ import com.example.sketchTalk.dto.chat.in.ChatReq;
 import com.example.sketchTalk.dto.chat.in.DrawReq;
 import com.example.sketchTalk.dto.chat.in.SelectedImageReq;
 import com.example.sketchTalk.dto.chat.out.*;
+import com.example.sketchTalk.dto.comment.in.SaveCommentReq;
 import com.example.sketchTalk.dto.webClient.in.ChatDataBody;
 import com.example.sketchTalk.dto.webClient.in.DiaryDataBody;
 import com.example.sketchTalk.dto.webClient.in.ImageDataBody;
@@ -29,6 +30,7 @@ public class ChatService {
     private final AIRequestService aiRequestService;
     private final DiaryRepository diaryRepository;
     private final ImageRepository imageRepository;
+    private final CommentService commentService;
 
     public ChatReplyRes getReply(ChatReq chatReq, Long userId) {
         System.out.println("text : " + chatReq.dialog());
@@ -62,8 +64,10 @@ public class ChatService {
         Image image = new Image(diary, req.style(), req.imageUrl());
         diary.saveImage(image);
         imageRepository.save(image);
-        //코멘트 요청(병렬)
+        //코멘트 요청 및 저장(병렬)
         CommentRes commentRes = aiRequestService.requestComment(userId, diary.getContent());
+        SaveCommentReq saveCommentReq = new SaveCommentReq(diary.getDiaryId(), commentRes.data().comment());
+        commentService.putComment(saveCommentReq);
         //도전과제 검색(병렬)
 
         //응답 생성 및 반환

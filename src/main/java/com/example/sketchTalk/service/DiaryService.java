@@ -39,10 +39,6 @@ public class DiaryService {
         Diary diary = new Diary(user, saveDiaryReq);
         Diary savedDiary = diaryRepository.save(diary);
 
-//        ReqContentRes writtenComment = commentService.reqComment(diary.getContent());
-//        SaveCommentReq saveCommentReq = new SaveCommentReq(savedDiary.getDiaryId(), writtenComment.content());
-//        SaveCommentRes saveCommentRes = commentService.putComment(saveCommentReq);
-
         return new SaveDiaryRes(savedDiary.getDiaryId(), savedDiary.getTitle(), savedDiary.getContent(), savedDiary.getEmotion());
     }
 
