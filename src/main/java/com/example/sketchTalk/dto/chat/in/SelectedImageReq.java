@@ -2,9 +2,9 @@ package com.example.sketchTalk.dto.chat.in;
 
 import com.example.sketchTalk.model.Style;
 
-public record DrawReq(
+public record SelectedImageReq(
         Long diaryId,
-        String content,
-        Style style
+        Style style,
+        String imageUrl
 ) {
 }

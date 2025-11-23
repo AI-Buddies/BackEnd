@@ -35,12 +35,13 @@ spring:
       maxRequestSize: 300MB
 
 fastapi:
-  endpoint: http://43.201.10.241
+  endpoint: http://13.125.170.8
+  image-endpoint : http://16.184.59.146:8000
 
 firebase:
   service-account: ${FIREBASE_SERVICE_ACCOUNT}
   project-id: ${FIREBASE_PROJECT_ID}
-  
+
 cloud:
   aws:
     s3:
