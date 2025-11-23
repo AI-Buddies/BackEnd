@@ -1,7 +1,9 @@
 package com.example.sketchTalk.service;
 
 import com.example.sketchTalk.dto.chat.in.DrawReq;
+import com.example.sketchTalk.dto.chat.out.CommentRes;
 import com.example.sketchTalk.dto.chat.out.ImageRes;
+import com.example.sketchTalk.dto.webClient.out.CommentReq;
 import com.example.sketchTalk.dto.webClient.out.DiaryReq;
 import com.example.sketchTalk.dto.webClient.out.ImageReq;
 import com.example.sketchTalk.dto.webClient.out.ReplyReq;
@@ -76,6 +78,24 @@ public class AIRequestService {
                             });
                 })
                 .bodyToMono(ImageRes.class);
+        return result.block();
+    }
+
+    public CommentRes requestComment(Long userId, String content) {
+        String uri = baseURL + "/comment";
+        CommentReq commentReq = new CommentReq(userId, content);
+        Mono<CommentRes> result = webClient.post()
+                .uri(uri)
+                .bodyValue(commentReq)
+                .retrieve()
+                .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(), response -> {
+                    return response.bodyToMono(String.class)
+                            .flatMap(body -> {
+                                System.err.println("FastAPI 422 Error Body: " + body);
+                                return Mono.error(new RuntimeException("FastAPI 요청 실패: " + response.statusCode() + " - " + body));
+                            });
+                })
+                .bodyToMono(CommentRes.class);
         return result.block();
     }
 }

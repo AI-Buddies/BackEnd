@@ -2,12 +2,12 @@ package com.example.sketchTalk.dto.chat.out;
 
 import com.example.sketchTalk.model.Emotion;
 
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 public record CompletedDiaryRes(
         Long diaryId,
-        Instant date,
+        LocalDate date,
         Emotion emotion,
         String title,
         String content,
