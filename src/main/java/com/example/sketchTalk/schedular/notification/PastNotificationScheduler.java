@@ -66,7 +66,7 @@ public class PastNotificationScheduler {
                         case MONTH -> pastDate = today.minusMonths(pn.getNotificationValue());
                     };
 
-                    List<Diary> diaries = diaryRepository.findAllByUserIdAndDateIs(userId, pastDate);
+                    List<Diary> diaries = diaryRepository.findAllByUser_UserIdAndDateIs(userId, pastDate);
 
                     if (diaries.isEmpty()) {
                         return;
