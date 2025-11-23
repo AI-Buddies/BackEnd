@@ -26,6 +26,17 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     }
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getServletPath();
+
+        return path.equals("/user/login") ||
+                path.equals("/user/register") ||
+                path.equals("/refresh") ||
+                path.startsWith("/health-check") ||
+                path.equals("/error");
+    }
+
+    @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
