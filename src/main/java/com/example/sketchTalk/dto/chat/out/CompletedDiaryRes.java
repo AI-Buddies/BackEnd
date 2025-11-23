@@ -1,5 +1,6 @@
 package com.example.sketchTalk.dto.chat.out;
 
+import com.example.sketchTalk.dto.category.out.AchievedResultRes;
 import com.example.sketchTalk.model.Emotion;
 
 import java.time.LocalDate;
@@ -14,7 +15,7 @@ public record CompletedDiaryRes(
         String imageURL,
         String comment,
         Boolean achieved,
-        List<String> achievedList,
+        AchievedResultRes achievedResult,
         String voice
 ) {
 }

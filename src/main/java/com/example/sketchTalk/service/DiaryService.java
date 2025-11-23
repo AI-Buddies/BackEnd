@@ -32,7 +32,6 @@ public class DiaryService {
     private final CategoryService categoryService;
     private final JwtUtils jwtUtils;
     private final UserRepository userRepository;
-//    private final CommentService commentService;
 
     public SaveDiaryRes putDiary(long userId, SaveDiaryReq saveDiaryReq) {
         User user = userRepository.findById(userId).orElse(null);
@@ -67,12 +66,12 @@ public class DiaryService {
     UserSub에 추가를 하고
     전체 카테고리를 달성헀는지 확인
      */
-    private AchievedResultRes checkAchievement(long userId, String diaryContent) {
+    public AchievedResultRes checkAchievement(Long userId, String diaryContent) {
         List<SubCategoryNamesDTO> subCategories = subCategoryService.findAllSubCategories();//모든 서브카테고리 조회
         List<SubCategoryNamesDTO> achievedSubs = findSubs(diaryContent, subCategories);//일기 내 검색
         List<CategoryCompletionRes> achievedCategories = List.of();
         if(!achievedSubs.isEmpty()) {//달성한 도전과제가 있을 경우
-            List<Long> categoryIds = subCategoryService.updateSubCategory(achievedSubs);//각각의 USER_SUB를 저장 및 확인할 카테고리 Id 저장
+            List<Long> categoryIds = subCategoryService.updateSubCategory(userId, achievedSubs);//각각의 USER_SUB를 저장 및 확인할 카테고리 Id 저장
             achievedCategories = categoryService.updateCategory(userId, categoryIds);//카테고리 전체의 달성 여부를 확인 및 처리
         }
         return new AchievedResultRes(achievedSubs, achievedCategories);

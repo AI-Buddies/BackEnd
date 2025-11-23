@@ -29,9 +29,8 @@ public class SubCategoryService {
                 .collect(Collectors.toList());
     }
 
-    public List<Long> updateSubCategory(List<SubCategoryNamesDTO> subs) {
+    public List<Long> updateSubCategory(Long userId, List<SubCategoryNamesDTO> subs) {
         Set<Long> categoryNeedToCheck = new HashSet<>();
-        Long userId = 1L;
         subs.forEach(subDTO -> {
             categoryNeedToCheck.add(subDTO.category().getCategoryId());
             UserSubKey userSubKey = new UserSubKey(userId, subDTO.subId());
