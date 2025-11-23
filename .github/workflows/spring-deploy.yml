@@ -24,14 +24,14 @@ jobs:
         run: chmod +x ./gradlew
         shell: bash # 권한 부여
 
-      - name: Build with Gradle
-        run: ./gradlew clean build -x test
-        shell: bash # 빌드 시작
-
       - name: Create Firebase Key File
         run: |
           mkdir -p src/main/resources/firebase
           echo "${{ secrets.FIREBASE_KEY }}" > src/main/resources/firebase/sketchtalk-firebase-adminsdk.json
+
+      - name: Build with Gradle
+        run: ./gradlew clean build -x test
+        shell: bash # 빌드 시작
 
       - name: Get current time
         uses: 1466587594/get-current-time@v2
