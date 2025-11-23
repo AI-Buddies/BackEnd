@@ -1,7 +1,5 @@
 package com.example.sketchTalk.model.entity;
 
-import com.example.sketchTalk._core.error.CustomException;
-import com.example.sketchTalk.exception.user.UserExceptions;
 import jakarta.persistence.*;
 import lombok.*;
 
