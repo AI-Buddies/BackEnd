@@ -73,7 +73,7 @@ public class PastNotificationScheduler {
                     }
 
                     // 해당 유저의 모든 기기 토큰 조회
-                    List<DeviceToken> deviceTokens = deviceTokenRepository.findAllByUserId(userId);
+                    List<DeviceToken> deviceTokens = deviceTokenRepository.findAllByUserIdAndRevokedFalse(userId);
 
                     if (deviceTokens.isEmpty()) {
                         return;

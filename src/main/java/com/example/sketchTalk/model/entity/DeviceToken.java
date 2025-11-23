@@ -2,6 +2,7 @@ package com.example.sketchTalk.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,7 +23,6 @@ public class DeviceToken {
     @Column(nullable = false)
     private String fcmToken;
 
-    @Column(nullable = false)
     private String deviceType;
 
     private String deviceIdentifier;
@@ -36,11 +36,15 @@ public class DeviceToken {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @PrePersist
-    protected void onCreate() {
+    @Builder
+    public DeviceToken(Long userId, String fcmToken, String deviceType, String deviceIdentifier) {
+        this.userId = userId;
+        this.fcmToken = fcmToken;
+        this.deviceType = deviceType;
+        this.deviceIdentifier = deviceIdentifier;
+        this.revoked = false;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
-        this.revoked = false;
     }
 
     public void updateFcmToken(String newToken) {

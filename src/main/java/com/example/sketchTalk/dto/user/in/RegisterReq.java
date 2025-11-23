@@ -6,6 +6,10 @@ public record RegisterReq(
         String loginId,
         String password,
         String nickname,
-        LocalDate birthdate
+        LocalDate birthdate,
+
+        String deviceToken,
+        String deviceType,
+        String deviceIdentifier
 ){
 }
