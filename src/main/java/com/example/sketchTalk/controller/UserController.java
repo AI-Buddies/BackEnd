@@ -39,8 +39,11 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public ApiResponse<UserRes> logout(@AuthenticationPrincipal Long userId) {
-        UserRes result = service.logout(userId);
+    public ApiResponse<UserRes> logout(
+            @AuthenticationPrincipal Long userId,
+            @RequestBody LogoutReq logoutReq
+    ) {
+        UserRes result = service.logout(userId, logoutReq);
 
         return ApiResponse.onSuccess(HttpStatus.OK, result);
     }

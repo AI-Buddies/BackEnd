@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
     List<GetCalanderDiraryRes> findAllByUserAndDateBetween(User user, LocalDate dateAfter, LocalDate dateBefore);
     List<Diary> findAllByUserAndDateBetweenOrderByDateAsc(User user, LocalDate start, LocalDate end);
+    List<Diary> findAllByUser_UserIdAndDateIs(Long userId, LocalDate date);
 
     Optional<Diary> findByDiaryId(Long diaryId);
 }
