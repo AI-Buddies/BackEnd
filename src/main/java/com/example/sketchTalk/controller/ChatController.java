@@ -51,8 +51,9 @@ public class ChatController {
         return ApiResponse.onSuccess(HttpStatus.CREATED, secondImageRes);
     }
 
-    /*@PostMapping("/image/save")
-    public ApiResponse<CompletedDiaryRes> completeDiary(@RequestBody SelectedImageReq req) {
-        CompletedDiaryRes res = chatService.getCompletedDiary(req);
-    }*/
+    @PostMapping("/image/save")
+    public ApiResponse<CompletedDiaryRes> completeDiary(@RequestBody SelectedImageReq req, @AuthenticationPrincipal Long userId) {
+        CompletedDiaryRes res = chatService.getCompletedDiary(req, userId);
+        return ApiResponse.onSuccess(HttpStatus.CREATED, res);
+    }
 }

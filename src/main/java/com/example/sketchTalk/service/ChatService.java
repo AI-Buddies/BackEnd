@@ -1,10 +1,12 @@
 package com.example.sketchTalk.service;
 
 import com.example.sketchTalk._core.error.CustomException;
+import com.example.sketchTalk.dto.category.out.AchievedResultRes;
 import com.example.sketchTalk.dto.chat.in.ChatReq;
 import com.example.sketchTalk.dto.chat.in.DrawReq;
 import com.example.sketchTalk.dto.chat.in.SelectedImageReq;
 import com.example.sketchTalk.dto.chat.out.*;
+import com.example.sketchTalk.dto.comment.in.SaveCommentReq;
 import com.example.sketchTalk.dto.webClient.in.ChatDataBody;
 import com.example.sketchTalk.dto.webClient.in.DiaryDataBody;
 import com.example.sketchTalk.dto.webClient.in.ImageDataBody;
@@ -20,6 +22,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ChatService {
@@ -27,6 +31,8 @@ public class ChatService {
     private final AIRequestService aiRequestService;
     private final DiaryRepository diaryRepository;
     private final ImageRepository imageRepository;
+    private final CommentService commentService;
+    private final DiaryService diaryService;
 
     public ChatReplyRes getReply(ChatReq chatReq, Long userId) {
         System.out.println("text : " + chatReq.dialog());
@@ -53,16 +59,25 @@ public class ChatService {
         return new SecondDrawImageRes(diaryId, style, newImageURL, prevImageUrl);
     }
 
-    /*@Transactional
-    public CompletedDiaryRes getCompletedDiary(SelectedImageReq req) {
-        //일기 저장
+    @Transactional
+    public CompletedDiaryRes getCompletedDiary(SelectedImageReq req, Long userId) {
+        //일기, 그림 저장
         Diary diary = diaryRepository.findByDiaryId(req.diaryId()).orElseThrow(()->new CustomException(DiaryExceptions.DIARY_NOT_FOUND, req.diaryId()));
         Image image = new Image(diary, req.style(), req.imageUrl());
         diary.saveImage(image);
         imageRepository.save(image);
-        //코멘트 요청(병렬)
-
+        //코멘트 요청 및 저장(병렬)
+        CommentRes commentRes = aiRequestService.requestComment(userId, diary.getContent());
+        SaveCommentReq saveCommentReq = new SaveCommentReq(diary.getDiaryId(), commentRes.data().comment());
+        commentService.putComment(saveCommentReq);
         //도전과제 검색(병렬)
+        AchievedResultRes achievedResult =  diaryService.checkAchievement(userId, diary.getContent());
+
         //응답 생성 및 반환
-    }*/
+        CompletedDiaryRes completedDiaryRes = new CompletedDiaryRes(
+                diary.getDiaryId(), diary.getDate(), diary.getEmotion(), diary.getTitle(), diary.getContent(),
+                image.getUrl(), commentRes.data().comment(), false, achievedResult, "boy"
+        );
+        return completedDiaryRes;
+    }
 }

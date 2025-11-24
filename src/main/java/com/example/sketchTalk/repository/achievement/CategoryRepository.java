@@ -14,18 +14,18 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query(
             value = """
                     SELECT
-                        C.id AS cid as categoryId, C.name as categoryName
+                        C.category_id as categoryId, C.name as categoryName
                     FROM
                         category C
                     JOIN
-                        sub_category S ON C.id = S.category_id
+                        sub_category S ON C.category_id = S.category_id
                     LEFT JOIN
-                        user_sub U ON S.id = U.subId AND U.user_id = :userId
-                    WHERE C.id IN :idList
+                        user_sub U ON S.sub_id = U.sub_id AND U.user_id = :userId
+                    WHERE C.category_id IN :idList
                     GROUP BY
-                        C.id, Cname
+                        C.category_id, C.name
                     HAVING
-                        COUNT(S.id) = SUM(CASE WHEN U.is_clear = TRUE THEN 1 ELSE 0 END);
+                        COUNT(S.sub_id) = SUM(CASE WHEN U.is_clear = TRUE THEN 1 ELSE 0 END);
                     
                     """,
             nativeQuery = true
