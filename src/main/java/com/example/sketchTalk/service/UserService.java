@@ -43,9 +43,7 @@ public class UserService {
         return new LoginRes(user.getNickname(), accessToken, refreshToken.getToken());
     }
 
-    public CheckDuplicateIdRes checkDuplicateId(CheckDuplicateIdReq req) {
-        String loginId = req.loginId();
-
+    public CheckDuplicateIdRes checkDuplicateId(String loginId) {
         boolean isAvailable = !userRepository.existsByLoginId(loginId);
 
         return new CheckDuplicateIdRes(isAvailable);

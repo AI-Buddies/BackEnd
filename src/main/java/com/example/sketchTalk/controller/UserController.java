@@ -39,8 +39,8 @@ public class UserController {
     }
 
     @GetMapping("/id/availability")
-    public ApiResponse<CheckDuplicateIdRes> checkDuplicateId(@RequestBody CheckDuplicateIdReq checkDuplicateIdReq) {
-        CheckDuplicateIdRes result = service.checkDuplicateId(checkDuplicateIdReq);
+    public ApiResponse<CheckDuplicateIdRes> checkDuplicateId(@RequestParam String loginId) {
+        CheckDuplicateIdRes result = service.checkDuplicateId(loginId);
 
         return ApiResponse.onSuccess(HttpStatus.OK, result);
     }
