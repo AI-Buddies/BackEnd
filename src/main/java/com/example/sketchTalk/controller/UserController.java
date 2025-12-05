@@ -64,8 +64,11 @@ public class UserController {
     }
 
     @PutMapping
-    public ApiResponse<UpdateUserInfoRes> updateUserInformation(@RequestBody UpdateUserInfoReq updateUserInfoReq) {
-        UpdateUserInfoRes result = service.updateUserInformation(updateUserInfoReq);
+    public ApiResponse<UpdateUserInfoRes> updateUserInformation(
+            @AuthenticationPrincipal Long userId,
+            @RequestBody UpdateUserInfoReq updateUserInfoReq
+    ) {
+        UpdateUserInfoRes result = service.updateUserInformation(userId, updateUserInfoReq);
 
         return ApiResponse.onSuccess(HttpStatus.OK, result);
     }

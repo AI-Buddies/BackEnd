@@ -98,8 +98,8 @@ public class UserService {
     }
 
     @Transactional
-    public UpdateUserInfoRes updateUserInformation(UpdateUserInfoReq req) {
-        User user = userRepository.findByLoginId(req.loginId())
+    public UpdateUserInfoRes updateUserInformation(Long userId, UpdateUserInfoReq req) {
+        User user = userRepository.findByUserId(userId)
                 .orElseThrow( () -> new CustomException(UserExceptions.ID_NOT_FOUND));
 
         user.updatePassword(passwordEncoder.encode(req.password()));
