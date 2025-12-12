@@ -13,11 +13,14 @@ import com.example.sketchTalk.dto.webClient.in.ImageDataBody;
 import com.example.sketchTalk.dto.webClient.in.SecondImageDataBody;
 import com.example.sketchTalk.exception.chat.ChatExceptions;
 import com.example.sketchTalk.exception.diary.DiaryExceptions;
+import com.example.sketchTalk.exception.user.UserExceptions;
 import com.example.sketchTalk.model.Style;
 import com.example.sketchTalk.model.entity.Diary;
 import com.example.sketchTalk.model.entity.Image;
+import com.example.sketchTalk.model.entity.setting.AudioSetting;
 import com.example.sketchTalk.repository.DiaryRepository;
 import com.example.sketchTalk.repository.ImageRepository;
+import com.example.sketchTalk.repository.setting.AudioSettingRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,12 +36,15 @@ public class ChatService {
     private final ImageRepository imageRepository;
     private final CommentService commentService;
     private final DiaryService diaryService;
+    private final AudioSettingRepository audioSettingRepository;
 
     public ChatReplyRes getReply(ChatReq chatReq, Long userId) {
         System.out.println("text : " + chatReq.dialog());
         ReplyRes replyRes = aiRequestService.sendChat(userId, chatReq.dialog());
         if(replyRes.isSuccess()) {
-            return new ChatReplyRes(replyRes.data().reply(), replyRes.data().isSufficient(), "boy");//voice 조회 로직 추가예정
+            AudioSetting audioSetting = audioSettingRepository.findByUserId(userId)
+                    .orElseThrow( () -> new CustomException(UserExceptions.ID_NOT_FOUND));
+            return new ChatReplyRes(replyRes.data().reply(), replyRes.data().isSufficient(), audioSetting.getVoiceType().toString());
         }
         else throw new CustomException(ChatExceptions.SEND_CHAT_ERROR);
     }

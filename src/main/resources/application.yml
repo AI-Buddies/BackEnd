@@ -35,7 +35,7 @@ spring:
       maxRequestSize: 300MB
 
 fastapi:
-  endpoint: http://13.125.170.8
+  endpoint: http://13.125.170.8:8000
   image-endpoint : http://16.184.59.146:8000
 
 firebase:
