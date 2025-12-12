@@ -44,7 +44,7 @@ public class ChatService {
         if(replyRes.isSuccess()) {
             AudioSetting audioSetting = audioSettingRepository.findByUserId(userId)
                     .orElseThrow( () -> new CustomException(UserExceptions.ID_NOT_FOUND));
-            return new ChatReplyRes(replyRes.data().reply(), replyRes.data().isSufficient(), audioSetting.getVoiceType().toString());
+            return new ChatReplyRes(replyRes.data().reply(), replyRes.data().isSufficient(), audioSetting.getVoiceType().getValue());
         }
         else throw new CustomException(ChatExceptions.SEND_CHAT_ERROR);
     }
@@ -79,10 +79,14 @@ public class ChatService {
         //도전과제 검색(병렬)
         AchievedResultRes achievedResult =  diaryService.checkAchievement(userId, diary.getContent());
 
+        AudioSetting audioSetting = audioSettingRepository.findByUserId(userId)
+                .orElseThrow( () -> new CustomException(UserExceptions.ID_NOT_FOUND));
+
+
         //응답 생성 및 반환
         CompletedDiaryRes completedDiaryRes = new CompletedDiaryRes(
                 diary.getDiaryId(), diary.getDate(), diary.getEmotion(), diary.getTitle(), diary.getContent(),
-                image.getUrl(), commentRes.data().comment(), false, achievedResult, "boy"
+                image.getUrl(), commentRes.data().comment(), false, achievedResult, audioSetting.getVoiceType().getValue()
         );
         return completedDiaryRes;
     }
