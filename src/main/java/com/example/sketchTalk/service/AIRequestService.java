@@ -3,10 +3,7 @@ package com.example.sketchTalk.service;
 import com.example.sketchTalk.dto.chat.in.DrawReq;
 import com.example.sketchTalk.dto.chat.out.CommentRes;
 import com.example.sketchTalk.dto.chat.out.ImageRes;
-import com.example.sketchTalk.dto.webClient.out.CommentReq;
-import com.example.sketchTalk.dto.webClient.out.DiaryReq;
-import com.example.sketchTalk.dto.webClient.out.ImageReq;
-import com.example.sketchTalk.dto.webClient.out.ReplyReq;
+import com.example.sketchTalk.dto.webClient.out.*;
 import com.example.sketchTalk.dto.chat.out.DiaryRes;
 import com.example.sketchTalk.dto.chat.out.ReplyRes;
 import lombok.RequiredArgsConstructor;
@@ -60,6 +57,33 @@ public class AIRequestService {
                 })
                 .bodyToMono(DiaryRes.class);
         return result.block();
+    }
+
+    public DrawReq requestEnglish(Long userId, String koreanText, DrawReq drawReq) {
+        String uri = baseURL + "/diary/english";
+        System.out.println("uri : "+uri);
+        EnglishReq englishReq = new EnglishReq(userId, koreanText);
+        Mono<String> result = webClient.post()
+                .uri(uri)
+                .bodyValue(englishReq)
+                .retrieve()
+                .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(), response -> {
+                    return response.bodyToMono(String.class)
+                            .flatMap(body -> {
+                                System.err.println("FastAPI 422 Error Body: " + body);
+                                return Mono.error(new RuntimeException("FastAPI 요청 실패: " + response.statusCode() + " - " + body));
+                            });
+                })
+                .bodyToMono(String.class);
+        String englishResult;
+        try {
+            englishResult = result.block();
+        } catch (Exception e) {
+            // 통신 또는 처리 중 에러 발생 시 적절한 예외 처리
+            System.err.println("AI 서버 통신 중 치명적인 오류 발생: " + e.getMessage());
+            throw new RuntimeException("AI 콘텐츠 생성 실패", e);
+        }
+        return new DrawReq(drawReq.diaryId(), englishResult, drawReq.style());
     }
 
     public ImageRes requestImage(Long userId, DrawReq req) {

@@ -56,11 +56,22 @@ public class ChatService {
     }
 
     public DrawImageRes getImage(DrawReq req, Long userId) {
-        ImageRes imageRes = aiRequestService.requestImage(userId, req);
+        //줄바꿈 제거
+        String requestContent = removeLine(req.content());
+        //번역
+        DrawReq englishDrawReq = aiRequestService.requestEnglish(userId, requestContent, req);
+        System.out.println("englishText : " + englishDrawReq.content());
+        ImageRes imageRes = aiRequestService.requestImage(userId, englishDrawReq);
         if(imageRes.isSuccess()) return new DrawImageRes(req.diaryId(), req.style(), imageRes.data().image_url());
         else throw new CustomException(ChatExceptions.DRAW_IMAGE_ERROR);
     }
 
+    private String removeLine(String text) {
+        if (text == null) {
+            return null;
+        }
+        return text.replaceAll("\n", "");
+    }
     public SecondDrawImageRes getTwoImages(Long diaryId, Style style, String newImageURL, String prevImageUrl) {
         return new SecondDrawImageRes(diaryId, style, newImageURL, prevImageUrl);
     }
