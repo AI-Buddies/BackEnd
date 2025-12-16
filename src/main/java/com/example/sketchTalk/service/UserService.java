@@ -4,11 +4,8 @@ import com.example.sketchTalk._core.error.CustomException;
 import com.example.sketchTalk.dto.user.in.*;
 import com.example.sketchTalk.dto.user.out.*;
 import com.example.sketchTalk.exception.user.UserExceptions;
-import com.example.sketchTalk.model.entity.DeviceToken;
-import com.example.sketchTalk.model.entity.RefreshToken;
-import com.example.sketchTalk.model.entity.User;
-import com.example.sketchTalk.repository.DeviceTokenRepository;
-import com.example.sketchTalk.repository.UserRepository;
+import com.example.sketchTalk.model.entity.*;
+import com.example.sketchTalk.repository.*;
 
 import com.example.sketchTalk.security.jwt.JwtUtils;
 import com.example.sketchTalk.service.setting.SettingProvisioningService;
@@ -27,6 +24,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final DeviceTokenRepository deviceTokenRepository;
+    private final DiaryRepository diaryRepository;
 
     private final SettingProvisioningService settingProvisioningService;
     private final RefreshTokenService refreshTokenService;
@@ -116,12 +114,15 @@ public class UserService {
         User user = userRepository.findByUserId(userId)
                 .orElseThrow( () -> new CustomException(UserExceptions.ID_NOT_FOUND));
 
-        userRepository.delete(user);
+        // 유저 관련 데이터 삭제
+        diaryRepository.deleteAllByUser_UserId(user.getUserId());
 
         // 관련 설정 삭제
         settingProvisioningService.deleteUserSetting(user.getUserId());
-
         deviceTokenRepository.deleteAllByUserId(userId);
+
+        // User 삭제
+        userRepository.delete(user);
 
         return new UserRes(user.getNickname());
     }
